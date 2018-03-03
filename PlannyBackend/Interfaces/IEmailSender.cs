@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Services
+namespace PlannyBackend.Interfaces
 {
     public interface IEmailSender
     {

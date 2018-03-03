@@ -5,6 +5,10 @@
     <UserSecretsId>aspnet-PlannyBackend-8B2D92E1-A666-4071-890E-2B2D135FE12A</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Dtos\PlannyDto.cs" />
+    <Compile Remove="Models\ParticipationCondition.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />

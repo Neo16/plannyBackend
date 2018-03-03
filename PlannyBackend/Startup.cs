@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using PlannyBackend.Data;
 using PlannyBackend.Models;
 using PlannyBackend.Services;
+using PlannyBackend.Interfaces;
+using PlannyBackend.Models.Identity;
 
 namespace PlannyBackend
 {
@@ -29,18 +31,23 @@ namespace PlannyBackend
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
-
+            services.AddTransient<IPlannyService, PlannyService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -53,6 +60,11 @@ namespace PlannyBackend
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCors(builder =>
+               builder.WithOrigins("http://localhost:3000")
+               .AllowAnyHeader()
+            );
+
             app.UseStaticFiles();
 
             app.UseAuthentication();
@@ -63,6 +75,9 @@ namespace PlannyBackend
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            context.Seed();
+
         }
     }
 }
