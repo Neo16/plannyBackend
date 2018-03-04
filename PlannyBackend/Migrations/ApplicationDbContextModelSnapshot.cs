@@ -250,7 +250,7 @@ namespace PlannyBackend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Participation");
+                    b.ToTable("Participations");
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.PlannyProposal", b =>

@@ -272,7 +272,7 @@ namespace PlannyBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Participation",
+                name: "Participations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -283,15 +283,15 @@ namespace PlannyBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Participation", x => x.Id);
+                    table.PrimaryKey("PK_Participations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participation_PlannyProposals_PlannyProposalId",
+                        name: "FK_Participations_PlannyProposals_PlannyProposalId",
                         column: x => x.PlannyProposalId,
                         principalTable: "PlannyProposals",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Participation_Users_UserId",
+                        name: "FK_Participations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -316,13 +316,13 @@ namespace PlannyBackend.Migrations
                 column: "SettlementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participation_PlannyProposalId",
-                table: "Participation",
+                name: "IX_Participations_PlannyProposalId",
+                table: "Participations",
                 column: "PlannyProposalId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participation_UserId",
-                table: "Participation",
+                name: "IX_Participations_UserId",
+                table: "Participations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -376,7 +376,7 @@ namespace PlannyBackend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Participation");
+                name: "Participations");
 
             migrationBuilder.DropTable(
                 name: "RoleClaims");

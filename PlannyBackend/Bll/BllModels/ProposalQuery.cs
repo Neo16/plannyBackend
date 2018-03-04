@@ -1,14 +1,12 @@
-﻿using AutoMapper;
-using PlannyBackend.Bll.BllModels;
-using PlannyBackend.Models.Enums;
+﻿using PlannyBackend.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Dtos
+namespace PlannyBackend.Bll.BllModels
 {
-    public class ProposalQueryDto
+    public class ProposalQuery
     {
         //kategoria
         public List<int> CategoryIds { get; set; }
@@ -24,7 +22,7 @@ namespace PlannyBackend.Dtos
 
         public int ParticipantsNumberMax { get; set; }
 
-        public bool OnlyPlanniesByFriends { get; set; }       
+        public bool OnlyPlanniesByFriends { get; set; }
 
         public bool OnlySimilarInterestParticipants { get; set; }
 
@@ -43,22 +41,6 @@ namespace PlannyBackend.Dtos
         public DateTime ToTime { get; set; }
 
         //Sorrend
-        public ProposalOrderDto Order { get; set; }
-
-        public ProposalQueryDto(ProposalQuery query)
-        {
-            Mapper.Map(query, this);
-        }
-
-        public ProposalQuery ToEntity()
-        {     
-            var result =  Mapper.Map<ProposalQuery>(this);
-            if (this.Order == null)
-            {
-                result.Order = new ProposalOrder();
-            }
-            return result;
-        }
-
+        public ProposalOrder Order { get; set; }
     }
 }

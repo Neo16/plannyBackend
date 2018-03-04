@@ -77,7 +77,8 @@ namespace PlannyBackend.Data
                     MaxAge = 99,
                     MinAge = 18,
                     MaxParticipants = 10,
-                    MinParticipants = 1               
+                    MinParticipants = 1,
+                    Participations = new List<Participation>() 
                 };
                 context.PlannyProposals.Add(planny);             
             }

@@ -39,19 +39,25 @@ namespace PlannyBackend.ApiControllers
             await _plannyService.CreatePlanny(plannyEnt);
             return Ok(planny);
         }
-
-        //todo list
-        [HttpGet("proposals")]
+    
+        [HttpPost("proposals")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
             "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
-        public async Task<IActionResult> GetPlannies(ProposalQueryDto query = null)
+        public async Task<IActionResult> GetPlannies([FromBody] ProposalQueryDto query = null)
         {
-            //if (query != null)
-            //{
-            //    //todo search 
-            //}
+            var plannies = new List<PlannyProposalDto>();
+            if (query != null)
+            {
+                plannies = (await _plannyService.SearchPlannyProposals(query.ToEntity()))
+                    .Select(e => new PlannyProposalDto(e)).ToList();
+            }
 
-            var plannies = await _plannyService.GetPlannyProposals();
+            else
+            {
+                plannies = (await _plannyService.GetPlannyProposals())
+                  .Select(e => new PlannyProposalDto(e)).ToList();
+            }
+            
             return Ok(plannies);
         }
         
@@ -63,5 +69,38 @@ namespace PlannyBackend.ApiControllers
 
             return Ok(new PlannyProposalDto(planny));
         }
+
+        [HttpGet("joinproposal")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
+        public async Task<IActionResult> JoinPlannyProposal([FromQuery] int proposalId)
+        {
+            //todo check, hogy van-e ilyen proposal és tudok-e rá jelentkezni
+
+            await _plannyService.JoinProposal(proposalId);
+            return Ok(proposalId);
+        }
+
+
+        [HttpGet("approveparticipation/")]       
+        public async Task<IActionResult> ApproveParticipation([FromQuery] int proposalId, [FromQuery] int participationId)
+        {
+            await _plannyService.ApproveParticipation(proposalId, participationId);
+            return Ok();
+        }
+
+        [HttpPut("proposals/{id}")]
+        public async Task<IActionResult> UpdateProposal(int id, [FromBody] CreatePlannyProposalDto planny)
+        {
+            //TODO
+            return Ok();
+        }
+
+        [HttpDelete("proposals/{id}")]
+        public async Task<IActionResult> DeleteProposal(int id)
+        {
+            //TODO
+            return Ok();
+        }
+
     }
 }

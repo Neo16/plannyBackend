@@ -14,6 +14,8 @@ using PlannyBackend.Services;
 using PlannyBackend.Interfaces;
 using PlannyBackend.Models.Identity;
 using Swashbuckle.AspNetCore.Swagger;
+using AutoMapper;
+using System.Reflection;
 
 namespace PlannyBackend
 {
@@ -88,6 +90,11 @@ namespace PlannyBackend
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.AddProfiles(GetType().GetTypeInfo().Assembly);
             });
 
             context.Seed();

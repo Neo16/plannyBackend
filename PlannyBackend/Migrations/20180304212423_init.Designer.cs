@@ -12,7 +12,7 @@ using System;
 namespace PlannyBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180303223020_init")]
+    [Migration("20180304212423_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -251,7 +251,7 @@ namespace PlannyBackend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Participation");
+                    b.ToTable("Participations");
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.PlannyProposal", b =>

@@ -12,6 +12,7 @@ namespace PlannyBackend.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
+        public virtual DbSet<Participation> Participations { get; set; }
         public virtual DbSet<PlannyProposal> PlannyProposals { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
 
