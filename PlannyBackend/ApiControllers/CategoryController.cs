@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PlannyBackend.Data;
 using PlannyBackend.Interfaces;
+using System.Net;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using PlannyBackend.Models;
 
 namespace PlannyBackend.ApiControllers
 {
     [Produces("application/json")]
-    [Route("api/Categories")]
+    [Route("api/categories")]
     public class CategoryController : Controller
     {
 
@@ -22,6 +25,7 @@ namespace PlannyBackend.ApiControllers
         }
 
         [HttpGet]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Category>), "Return all categories.")]
         public async Task<IActionResult> GetCategories()
         {
             var categories = await _catService.GetCategories();

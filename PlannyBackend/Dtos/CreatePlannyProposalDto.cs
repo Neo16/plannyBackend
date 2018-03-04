@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace PlannyBackend.Dtos
 {
     public class CreatePlannyProposalDto
-    {
-        public int Id { get; set; }
+    {       
         public string Name { get; set; }
         public string Description { get; set; }
 
@@ -27,32 +26,12 @@ namespace PlannyBackend.Dtos
         public bool IsOnlyForFriends { get; set; }
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
+         public int OwnerId { get; set; }
 
-        public CreatePlannyProposalDto(PlannyProposal original)
-        {            
-            this.Id = original.Id;
-            this.Name = original.Name;
-            this.Description = original.Description;
-            this.FromTime = original.FromTime;
-            this.ToTime = original.ToTime;
-            this.CategoryId = original.CategoryId;
-            this.MinParticipants = original.MinParticipants;
-            this.MaxParticipants = original.MaxParticipants;
-            this.MinAge = original.MinAge;
-            this.MaxAge = original.MaxAge;
-            this.IsOnlyForFriends = original.IsOnlyForFriends;
-            this.IsNearOwner = original.IsNearOwner;
-            this.IsSimilarInterest = original.IsSimilarInterest;
-            if (original.Location != null)
-            {
-                this.Location = new LocationDto(original.Location);
-            }
-        }
 
         public PlannyProposal ToEntity()
         {
-            var result = new PlannyProposal();
-            result.Id = this.Id;
+            var result = new PlannyProposal();           
             result.Name = this.Name;
             result.Description = this.Description;
             result.FromTime = this.FromTime;
@@ -65,6 +44,7 @@ namespace PlannyBackend.Dtos
             result.IsOnlyForFriends = this.IsOnlyForFriends;
             result.IsNearOwner = this.IsNearOwner;
             result.IsSimilarInterest = this.IsSimilarInterest;
+            result.OwnerId = this.OwnerId;
 
             if (this.Location != null)
             {

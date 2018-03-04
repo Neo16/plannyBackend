@@ -13,6 +13,7 @@ using PlannyBackend.Models;
 using PlannyBackend.Services;
 using PlannyBackend.Interfaces;
 using PlannyBackend.Models.Identity;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PlannyBackend
 {
@@ -41,6 +42,11 @@ namespace PlannyBackend
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
             services.AddMvc();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Planny API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +74,14 @@ namespace PlannyBackend
             app.UseStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseSwagger();
+
+           
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Planny API");
+            });
 
             app.UseMvc(routes =>
             {
