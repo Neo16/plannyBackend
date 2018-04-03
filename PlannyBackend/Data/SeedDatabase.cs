@@ -48,8 +48,7 @@ namespace PlannyBackend.Data
         private static ApplicationDbContext CreateCategories(this ApplicationDbContext context)
         {
             var category = new Category()
-            {
-                IsMain = false,
+            {               
                 Name = "Kosárlabda",
             };
 

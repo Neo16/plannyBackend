@@ -43,7 +43,8 @@ namespace PlannyBackend
             services.AddTransient<IPlannyService, PlannyService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddMvc();
+            services.AddCors();
+            services.AddMvc();          
 
             services.AddSwaggerGen(c =>
             {
@@ -69,8 +70,10 @@ namespace PlannyBackend
             }
 
             app.UseCors(builder =>
-               builder.WithOrigins("http://localhost:3000")
-               .AllowAnyHeader()
+               builder.AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials()
+                      .WithOrigins("http://localhost:3000")           
             );
 
             app.UseStaticFiles();

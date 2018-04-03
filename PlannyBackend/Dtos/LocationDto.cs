@@ -20,11 +20,15 @@ namespace PlannyBackend.Dtos
 
         public LocationDto(Location original)
         {
-            this.Id = original.Id;
-            this.Latitude = original.Lonlongitude;
-            this.Name = original.Name;
-            this.SettlementId = original.SettlementId;
-            this.StreetAddress = original.StreetAddress;          
+            if (original != null)
+            {
+                this.Id = original.Id;
+                this.Latitude = original.Lonlongitude;
+                this.Name = original.Name;
+                this.SettlementId = original.SettlementId;
+                this.StreetAddress = original.StreetAddress;
+            }
+                   
         }
 
         public Location ToEntity()

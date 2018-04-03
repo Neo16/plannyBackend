@@ -13,6 +13,8 @@ namespace PlannyBackend.Interfaces
         Task<PlannyProposal> GetPlannyProposalById(int Id);
         Task<List<PlannyProposal>> GetPlannyProposals();
 
+        Task<List<PlannyProposal>> GetPlannyProposalsOfUser(int userId);
+
         Task<List<PlannyProposal>> GetPlannyMyProposals();
         Task JoinProposal(int proposalId);
 

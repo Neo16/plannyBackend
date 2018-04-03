@@ -116,5 +116,13 @@ namespace PlannyBackend.Services
                 //TODO hiba 
             }
         }
+
+        public async Task<List<PlannyProposal>> GetPlannyProposalsOfUser(int userId)
+        {
+            return await _context.PlannyProposals
+               .Include(e => e.Location)
+               .Where(e => e.Owner.Id == userId)
+               .ToListAsync();
+        }
     }
 }

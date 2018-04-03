@@ -123,15 +123,11 @@ namespace PlannyBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CategoryId");
-
-                    b.Property<bool>("IsMain");
-
                     b.Property<string>("Name");
 
-                    b.HasKey("Id");
+                    b.Property<int?>("ParentCategoryId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
@@ -352,13 +348,6 @@ namespace PlannyBackend.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("PlannyBackend.Models.Category", b =>
-                {
-                    b.HasOne("PlannyBackend.Models.Category")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.Location", b =>

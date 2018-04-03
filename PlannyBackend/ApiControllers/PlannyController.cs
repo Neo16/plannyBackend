@@ -60,7 +60,21 @@ namespace PlannyBackend.ApiControllers
             
             return Ok(plannies);
         }
-        
+
+        [HttpGet("myproposals")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
+           "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
+        public async Task<IActionResult> GetMyPlannies()
+        {
+            var currentUserId = _userService.GetCurrentUser().Id;
+
+            var plannies = new List<PlannyProposalDto>();
+            plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
+                  .Select(e => new PlannyProposalDto(e)).ToList();            
+
+            return Ok(plannies);
+        }
+
         [HttpGet("proposals/{id}")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Returns a planny proposals of given Id.")]
         public async Task<IActionResult> GetPlannyProposal(int id)
