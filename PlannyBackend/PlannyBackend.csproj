@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Models\file.ts" />
+    <None Remove="Bll\file.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="Models\file.ts" />
+    <TypeScriptCompile Include="Bll\file.ts" />
   </ItemGroup>
 
 </Project>
