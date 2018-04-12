@@ -16,6 +16,11 @@ using PlannyBackend.Models.Identity;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using PlannyBackend.Bll.Interfaces;
+using PlannyBackend.Bll.Services;
 
 namespace PlannyBackend
 {
@@ -38,17 +43,46 @@ namespace PlannyBackend
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddAuthentication()
+              .AddCookie()
+              .AddJwtBearer(options =>
+              {
+                  options.RequireHttpsMetadata = false;
+                  options.SaveToken = true;
+                  options.TokenValidationParameters = new TokenValidationParameters
+                  {
+                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd")),
+                      ValidateAudience = false,
+                      ValidIssuer = "https://localhost:44381/"
+                  };
+              });
+                      
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IPlannyService, PlannyService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ITokenService, TokenService>();
             services.AddCors();
-            services.AddMvc();          
+            services.AddMvc();
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Planny API", Version = "v1" });
+
+                // Swagger 2.+ support
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    {"Bearer", new string[] { }},
+                };
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+                c.AddSecurityRequirement(security);
             });
         }
 
@@ -73,16 +107,14 @@ namespace PlannyBackend
                builder.AllowAnyHeader()
                       .AllowAnyMethod()
                       .AllowCredentials()
-                      .WithOrigins("http://localhost:3000")           
+                      .WithOrigins("http://localhost:3000")
             );
 
             app.UseStaticFiles();
-
             app.UseAuthentication();
-
             app.UseSwagger();
 
-           
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Planny API");

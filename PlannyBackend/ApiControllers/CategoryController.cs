@@ -9,22 +9,26 @@ using PlannyBackend.Interfaces;
 using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using PlannyBackend.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PlannyBackend.ApiControllers
 {
     [Produces("application/json")]
     [Route("api/categories")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
     public class CategoryController : Controller
     {
 
-        private readonly ICategoryService _catService;
-      
+        private readonly ICategoryService _catService;      
+       
+
         public CategoryController(ICategoryService categoryService)
         {
             _catService = categoryService;
         }
 
-        [HttpGet]
+        [HttpGet]      
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<Category>), "Return all categories.")]
         public async Task<IActionResult> GetCategories()
         {
