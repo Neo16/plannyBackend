@@ -58,7 +58,7 @@ namespace PlannyBackend.Services
 
         public async Task JoinProposal(int id)
         {
-            var currentUser = _userService.GetCurrentUser();
+            var currentUser = await _userService.GetCurrentUser();
 
             var proposal = await _context.PlannyProposals
                 .Where(e => e.Id == id)
@@ -68,7 +68,7 @@ namespace PlannyBackend.Services
             proposal.Participations.Add(new Participation()
             {
                 State = ParticipationState.Required,
-                User = currentUser,
+                User  = currentUser,
             });
 
             await _context.SaveChangesAsync();

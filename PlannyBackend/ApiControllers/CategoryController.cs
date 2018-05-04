@@ -16,7 +16,7 @@ namespace PlannyBackend.ApiControllers
 {
     [Produces("application/json")]
     [Route("api/categories")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
+   // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
     public class CategoryController : Controller
     {
 

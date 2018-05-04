@@ -9,6 +9,8 @@ using PlannyBackend.Models;
 using PlannyBackend.Interfaces;
 using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -61,12 +63,13 @@ namespace PlannyBackend.ApiControllers
             return Ok(plannies);
         }
 
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
         [HttpGet("myproposals")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
            "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()
         {
-            var currentUserId = _userService.GetCurrentUser().Id;
+            var currentUserId = (await _userService.GetCurrentUser()).Id;
 
             var plannies = new List<PlannyProposalDto>();
             plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))

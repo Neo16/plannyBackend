@@ -11,6 +11,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using PlannyBackend.Bll.Interfaces;
+using PlannyBackend.Interfaces;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -21,29 +22,51 @@ namespace PlannyBackend.ApiControllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ITokenService _tokenService;
+        private readonly IUserService _userService;
 
         public AccountController(
             ITokenService tokenService,
-            UserManager<ApplicationUser> userManager)
+           UserManager<ApplicationUser> userManager,
+           IUserService userService
+          )
         {
             _userManager = userManager;
             _tokenService = tokenService;
+            _userService = userService;
         }
-    
+
         [HttpPost("login")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(TokenDto), "JWT access token returned")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, null, "Wrong username or password")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
-            var user = await _userManager.FindByNameAsync(model.UserName);        
+            //todo elszáll ha nincs ilyen user. 
+            var user = await _userManager.FindByNameAsync(model.UserName);
 
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                return BadRequest();
+                return BadRequest("Invalid username or password.");
             }
 
             var token = await _tokenService.GetTokenForUserAsync(user);
             return Ok(token);
+        }
+
+        [HttpPost("register")]
+        [SwaggerResponse((int)HttpStatusCode.OK, null, "Registration sucessful.")]
+        [SwaggerResponse((int)HttpStatusCode.BadRequest, null, "Registration failed.")]
+
+        public async Task<IActionResult> Register([FromBody] RegisterDto model)
+        {
+            var user = model.toApplicationUser();
+            if (await _userService.RegisterUser(user, model.Password))
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

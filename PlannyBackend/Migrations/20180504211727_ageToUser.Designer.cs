@@ -12,8 +12,8 @@ using System;
 namespace PlannyBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180402094839_init")]
-    partial class init
+    [Migration("20180504211727_ageToUser")]
+    partial class ageToUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -163,6 +163,8 @@ namespace PlannyBackend.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<int>("Age");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
