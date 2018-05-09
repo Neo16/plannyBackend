@@ -23,14 +23,18 @@ using PlannyBackend.Bll.Interfaces;
 using PlannyBackend.Bll.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Http;
+using PlannyBackend.Common.Configurations;
 
 namespace PlannyBackend
 {
     public class Startup
     {
+        private IConfigurationSection ConfigurationSectionAzureBlob { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConfigurationSectionAzureBlob = Configuration.GetSection("AzureBlob");
         }
 
         public IConfiguration Configuration { get; }
@@ -38,6 +42,8 @@ namespace PlannyBackend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AzureBlobConfiguration>(ConfigurationSectionAzureBlob);
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -67,6 +73,7 @@ namespace PlannyBackend
             services.AddTransient<ITokenService, TokenService>();
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IFileService, FileService>();
             services.AddCors();
             services.AddMvc();
 

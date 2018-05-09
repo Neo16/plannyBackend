@@ -58,14 +58,23 @@ namespace PlannyBackend.ApiControllers
 
         public async Task<IActionResult> Register([FromBody] RegisterDto model)
         {
-            var user = model.toApplicationUser();
-            if (await _userService.RegisterUser(user, model.Password))
+            if (model == null
+                || string.IsNullOrEmpty(model.Email)
+                || string.IsNullOrEmpty(model.UserName))
             {
-                return Ok();
+                return BadRequest("Please fill al fields.");
+            }
+
+            var user = model.toApplicationUser();
+            var (success, error) = await _userService.RegisterUser(user, model.Password);
+
+            if (success)
+            {
+                return Ok("Registration sucessful.");
             }
             else
             {
-                return BadRequest();
+                return BadRequest(error);
             }
         }
     }

@@ -50,7 +50,7 @@ namespace PlannyBackend.Services
             return user;
         }
 
-        public async Task<bool> RegisterUser(ApplicationUser user, string password)
+        public async Task<(bool, string)> RegisterUser(ApplicationUser user, string password)
         {
             var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
@@ -60,11 +60,11 @@ namespace PlannyBackend.Services
                 //await _emailSender.SendEmailConfirmationAsync(user.Email, callbackUrl);
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return true;
+                return (true,null);
             }
             else
             {
-                return false;
+                return (false,result.Errors.FirstOrDefault()?.Description);
             }            
         } 
     }

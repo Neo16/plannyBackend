@@ -28,6 +28,8 @@ namespace PlannyBackend.Models
 
         public int CategoryId { get; set; }
 
+        public string PictureName { get; set; }
+
         #region participation conditions
 
         public int MinParticipants { get; set; }
@@ -36,7 +38,7 @@ namespace PlannyBackend.Models
         public int MaxAge { get; set; }
         public bool IsOnlyForFriends { get; set; }
         public bool IsNearOwner { get; set; }
-        public bool IsSimilarInterest { get; set; }
+        public bool IsSimilarInterest { get; set; }      
 
 #endregion
     }

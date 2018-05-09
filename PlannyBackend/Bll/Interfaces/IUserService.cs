@@ -11,6 +11,6 @@ namespace PlannyBackend.Interfaces
     public interface IUserService
     {
         Task<ApplicationUser> GetCurrentUser();
-        Task<bool> RegisterUser(ApplicationUser user, string password);
+        Task<(bool, string)> RegisterUser(ApplicationUser user, string password);
     }
 }

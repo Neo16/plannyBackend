@@ -11,6 +11,7 @@ using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PlannyBackend.Bll.Interfaces;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -20,11 +21,14 @@ namespace PlannyBackend.ApiControllers
     {
         private readonly IPlannyService _plannyService;
         private readonly IUserService _userService;
+        private readonly IFileService _fileService;
 
         public PlannyController(
+            IFileService fileService,
             IUserService userService,
             IPlannyService plannyService)
         {
+            _fileService = fileService; 
             _userService = userService;
             _plannyService = plannyService;
         }
@@ -37,7 +41,11 @@ namespace PlannyBackend.ApiControllers
             var currentUserId = _userService.GetCurrentUser().Id;
             planny.OwnerId = currentUserId;
 
+            //todo save planny picture 
+            var pictureName = await _fileService.UploadPlannyPicture(planny.Picture);
             var plannyEnt = planny.ToEntity();
+            plannyEnt.PictureName = pictureName;
+
             await _plannyService.CreatePlanny(plannyEnt);
             return Ok(planny);
         }

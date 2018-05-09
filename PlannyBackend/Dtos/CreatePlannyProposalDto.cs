@@ -1,4 +1,5 @@
-﻿using PlannyBackend.Models;
+﻿using Microsoft.AspNetCore.Http;
+using PlannyBackend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,8 @@ namespace PlannyBackend.Dtos
         public bool IsOnlyForFriends { get; set; }
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
-         public int OwnerId { get; set; }
+        public int OwnerId { get; set; }
+        public IFormFile Picture { get; set; }
 
 
         public PlannyProposal ToEntity()
