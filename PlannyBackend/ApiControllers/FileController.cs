@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using PlannyBackend.Dtos;
+using PlannyBackend.Models;
+using PlannyBackend.Interfaces;
+using System.Net;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PlannyBackend.Bll.Interfaces;
+
+namespace PlannyBackend.ApiControllers
+{
+    [Produces("application/json")]
+    [Route("api/files")]
+    public class FileController : Controller
+    {
+        private readonly IFileService _fileService;
+
+        public FileController(
+            IFileService fileService
+            )
+        {
+            _fileService = fileService;    
+        }
+
+        [HttpPost]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Upload a cover picture for a planny proposal.")]
+        public async Task<IActionResult> UploadPlannyPicture([FromForm] IFormFile Picture)
+        {          
+            var pictureName = await _fileService.UploadPlannyPicture(Picture);
+            return Ok(pictureName);
+        }      
+    }
+}

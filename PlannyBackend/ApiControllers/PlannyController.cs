@@ -40,12 +40,8 @@ namespace PlannyBackend.ApiControllers
             // todo: validáció 
             var currentUserId = _userService.GetCurrentUser().Id;
             planny.OwnerId = currentUserId;
-
-            //todo save planny picture 
-            var pictureName = await _fileService.UploadPlannyPicture(planny.Picture);
-            var plannyEnt = planny.ToEntity();
-            plannyEnt.PictureName = pictureName;
-
+           
+            var plannyEnt = planny.ToEntity();         
             await _plannyService.CreatePlanny(plannyEnt);
             return Ok(planny);
         }

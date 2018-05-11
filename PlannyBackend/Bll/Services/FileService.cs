@@ -61,7 +61,7 @@ namespace PlannyBackend.Bll.Services
 
             if (picture != null)
             {
-                var fileName = (Guid.NewGuid()).ToString() + Path.GetExtension(picture.FileName);
+                var fileName = (Guid.NewGuid()).ToString();
                 CloudBlobContainer container = getPictureContainer();
 
                 CloudBlockBlob blob = container.GetBlockBlobReference(fileName);

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\PictureDto.cs" />
     <Compile Remove="Dtos\PlannyDto.cs" />
     <Compile Remove="Models\ParticipationCondition.cs" />
   </ItemGroup>

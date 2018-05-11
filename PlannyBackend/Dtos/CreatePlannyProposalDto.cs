@@ -28,9 +28,6 @@ namespace PlannyBackend.Dtos
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
         public int OwnerId { get; set; }
-        public IFormFile Picture { get; set; }
-
-
         public PlannyProposal ToEntity()
         {
             var result = new PlannyProposal();           
