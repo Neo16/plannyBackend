@@ -17,6 +17,7 @@ namespace PlannyBackend.ApiControllers
 {
     [Produces("application/json")]
     [Route("api/plannies")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
     public class PlannyController : Controller
     {
         private readonly IPlannyService _plannyService;
@@ -33,12 +34,13 @@ namespace PlannyBackend.ApiControllers
             _plannyService = plannyService;
         }
         
-        [HttpPost]
+        [HttpPost]      
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Creates a planny proposal owned by the user logged in. Returns created planny proposal.")]
         public async Task<IActionResult> CreatePlanny([FromBody] CreatePlannyProposalDto planny)
         {
-            // todo: validáció 
-            var currentUserId = _userService.GetCurrentUser().Id;
+            // todo: validáció            
+            var currentUser = await _userService.GetCurrentUser();
+            var currentUserId = currentUser.Id;
             planny.OwnerId = currentUserId;
            
             var plannyEnt = planny.ToEntity();         
@@ -46,6 +48,7 @@ namespace PlannyBackend.ApiControllers
             return Ok(planny);
         }
     
+        [AllowAnonymous]
         [HttpPost("proposals")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
             "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
@@ -66,8 +69,7 @@ namespace PlannyBackend.ApiControllers
             
             return Ok(plannies);
         }
-
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
+      
         [HttpGet("myproposals")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
            "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
@@ -82,7 +84,7 @@ namespace PlannyBackend.ApiControllers
             return Ok(plannies);
         }
 
-        [HttpGet("proposals/{id}")]
+        [HttpGet("proposals/{id}")]      
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Returns a planny proposals of given Id.")]
         public async Task<IActionResult> GetPlannyProposal(int id)
         {
@@ -91,12 +93,11 @@ namespace PlannyBackend.ApiControllers
             return Ok(new PlannyProposalDto(planny));
         }
 
-        [HttpGet("joinproposal")]
+        [HttpGet("joinproposal")]     
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
         public async Task<IActionResult> JoinPlannyProposal([FromQuery] int proposalId)
         {
             //todo check, hogy van-e ilyen proposal és tudok-e rá jelentkezni
-
             await _plannyService.JoinProposal(proposalId);
             return Ok(proposalId);
         }

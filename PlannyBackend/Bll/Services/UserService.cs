@@ -46,7 +46,8 @@ namespace PlannyBackend.Services
         //egyelőre fake, amíg nincs rendes bejelentkezés, addig az első user a current 
         public async Task<ApplicationUser> GetCurrentUser()
         {
-            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+            var u = _httpContextAccessor.HttpContext.User;
+            var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);            
             return user;
         }
 

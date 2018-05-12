@@ -29,6 +29,7 @@ namespace PlannyBackend.ApiControllers
         }
 
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Upload a cover picture for a planny proposal.")]
         public async Task<IActionResult> UploadPlannyPicture([FromForm] IFormFile Picture)
         {          

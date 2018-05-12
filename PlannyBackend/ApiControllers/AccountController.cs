@@ -39,7 +39,7 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(TokenDto), "JWT access token returned")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, null, "Wrong username or password")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
-        {
+        {    
             //todo elszáll ha nincs ilyen user. 
             var user = await _userManager.FindByNameAsync(model.UserName);
 
@@ -47,7 +47,6 @@ namespace PlannyBackend.ApiControllers
             {
                 return BadRequest("Invalid username or password.");
             }
-
             var token = await _tokenService.GetTokenForUserAsync(user);
             return Ok(token);
         }
