@@ -27,6 +27,7 @@ namespace PlannyBackend.Dtos
         public bool IsOnlyForFriends { get; set; }
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
+        public string PictureName { get; set; }
 
         public PlannyProposalDto(PlannyProposal original)
         {            
@@ -44,6 +45,7 @@ namespace PlannyBackend.Dtos
             this.IsOnlyForFriends = original.IsOnlyForFriends;
             this.IsNearOwner = original.IsNearOwner;
             this.IsSimilarInterest = original.IsSimilarInterest;
+            this.PictureName = original.PictureName;
 
             if (original.Location != null)
             {
