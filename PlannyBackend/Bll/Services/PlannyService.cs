@@ -45,6 +45,7 @@ namespace PlannyBackend.Services
         {
             return await _context.PlannyProposals
                 .Include(e => e.Location)
+                .Include(e => e.Participations)
                 .Where(e => e.Id == Id)
                 .FirstOrDefaultAsync();
         }
@@ -63,12 +64,12 @@ namespace PlannyBackend.Services
             var proposal = await _context.PlannyProposals
                 .Where(e => e.Id == id)
                 .Include(e => e.Participations)
-                .FirstAsync();          
+                .FirstAsync();
 
             proposal.Participations.Add(new Participation()
             {
                 State = ParticipationState.Required,
-                User  = currentUser,
+                User = currentUser,
             });
 
             await _context.SaveChangesAsync();
@@ -108,7 +109,7 @@ namespace PlannyBackend.Services
 
                 participation.State = ParticipationState.Approved;
 
-               await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
             }
             else
@@ -123,6 +124,27 @@ namespace PlannyBackend.Services
                .Include(e => e.Location)
                .Where(e => e.Owner.Id == userId)
                .ToListAsync();
+        }
+
+        public async Task CancelParticipation(int proposalId)
+        {
+            var currentUser = await _userService.GetCurrentUser();
+
+            var proposal = await _context.PlannyProposals
+                .Where(e => e.Id == proposalId)
+                .Include(e => e.Participations)
+                .FirstOrDefaultAsync();
+
+            if (proposal != null)
+            {
+                var participation = proposal.Participations
+               .Where(e => e.UserId == currentUser.Id)
+               .First();
+
+                proposal.Participations.Remove(participation);
+
+                await _context.SaveChangesAsync();
+            }    
         }
     }
 }

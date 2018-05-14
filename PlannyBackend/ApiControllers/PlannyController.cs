@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PlannyBackend.Bll.Interfaces;
+using PlannyBackend.Models.Enums;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -88,18 +89,43 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Returns a planny proposals of given Id.")]
         public async Task<IActionResult> GetPlannyProposal(int id)
         {
-            var planny = await _plannyService.GetPlannyProposalById(id);
+            var currentUserId = (await _userService.GetCurrentUser()).Id;
+            var plannyObj = await _plannyService.GetPlannyProposalById(id);
+            var participation = plannyObj.Participations
+                .Where(p => p.UserId == currentUserId)
+                .FirstOrDefault();
 
-            return Ok(new PlannyProposalDto(planny));
+            var planny = new PlannyProposalDto(plannyObj);
+            if ( participation == null)
+            {
+                planny.ParticipationState = "none";
+            }
+            else
+            {
+                planny.ParticipationState = participation.State.ToString();
+            }
+
+            return Ok(planny);
         }
 
-        [HttpGet("joinproposal")]     
+
+        //todo legyen post 
+        [HttpGet("joinproposal/{id}")]     
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
-        public async Task<IActionResult> JoinPlannyProposal([FromQuery] int proposalId)
+        public async Task<IActionResult> JoinPlannyProposal(int id)
         {
             //todo check, hogy van-e ilyen proposal és tudok-e rá jelentkezni
-            await _plannyService.JoinProposal(proposalId);
-            return Ok(proposalId);
+            await _plannyService.JoinProposal(id);
+            return Ok(id);
+        }
+
+        
+        [HttpPost("cancelparticipation")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
+        public async Task<IActionResult> CancelParticiaption([FromBody] int id)
+        {           
+            await _plannyService.CancelParticipation(id);
+            return Ok("cancel successful");
         }
 
 

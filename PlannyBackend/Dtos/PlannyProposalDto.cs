@@ -28,6 +28,7 @@ namespace PlannyBackend.Dtos
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
         public string PictureName { get; set; }
+        public string ParticipationState  { get; set; }
 
         public PlannyProposalDto(PlannyProposal original)
         {            

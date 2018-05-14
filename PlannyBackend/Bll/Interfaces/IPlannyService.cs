@@ -21,7 +21,6 @@ namespace PlannyBackend.Interfaces
         Task ApproveParticipation(int proposalId, int participationId);
 
         Task<List<PlannyProposal>> SearchPlannyProposals(ProposalQuery query);
-
-
+        Task CancelParticipation(int proposalId);
     }
 }
