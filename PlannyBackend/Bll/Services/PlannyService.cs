@@ -37,6 +37,7 @@ namespace PlannyBackend.Services
 
             return await _context.PlannyProposals
                 .Where(e => e.OwnerId == currentUserId)
+                .Include(e => e.Category)
                 .Include(e => e.Location)
                 .ToListAsync();
         }
@@ -46,6 +47,7 @@ namespace PlannyBackend.Services
             return await _context.PlannyProposals
                 .Include(e => e.Location)
                 .Include(e => e.Participations)
+                .Include(e => e.Category)
                 .Where(e => e.Id == Id)
                 .FirstOrDefaultAsync();
         }
@@ -53,6 +55,7 @@ namespace PlannyBackend.Services
         public async Task<List<PlannyProposal>> GetPlannyProposals()
         {
             return await _context.PlannyProposals
+                .Include(e => e.Category)
                 .Include(e => e.Location)
                 .ToListAsync();
         }
@@ -122,6 +125,7 @@ namespace PlannyBackend.Services
         {
             return await _context.PlannyProposals
                .Include(e => e.Location)
+               .Include(e => e.Category)
                .Where(e => e.Owner.Id == userId)
                .ToListAsync();
         }
@@ -144,7 +148,7 @@ namespace PlannyBackend.Services
                 proposal.Participations.Remove(participation);
 
                 await _context.SaveChangesAsync();
-            }    
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PlannyBackend.Models;
+﻿using Microsoft.AspNetCore.Server.Kestrel.Internal.System.Collections.Sequences;
+using PlannyBackend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace PlannyBackend.Dtos
         public LocationDto Location { get; set; }
 
         public int CategoryId { get; set; }
+
+        public String[] CategoryNames { get; set; }
 
         public int MinParticipants { get; set; }
         public int MaxParticipants { get; set; }
@@ -47,6 +50,8 @@ namespace PlannyBackend.Dtos
             this.IsNearOwner = original.IsNearOwner;
             this.IsSimilarInterest = original.IsSimilarInterest;
             this.PictureName = original.PictureName;
+            this.CategoryNames = new string[3];
+            this.CategoryNames[0] = original.Category.Name;
 
             if (original.Location != null)
             {

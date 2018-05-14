@@ -47,12 +47,38 @@ namespace PlannyBackend.Data
 
         private static ApplicationDbContext CreateCategories(this ApplicationDbContext context)
         {
-            var category = new Category()
+            var category1 = new Category()
             {               
                 Name = "Kosárlabda",
             };
+            context.Categories.Add(category1);
 
-            context.Categories.Add(category);
+
+            var category2 = new Category()
+            {
+                Name = "Úszás",
+            };
+            context.Categories.Add(category2);
+
+            var category3 = new Category()
+            {
+                Name = "Paintball",
+            };
+            context.Categories.Add(category3);
+
+            var category4 = new Category()
+            {
+                Name = "Film",
+            };
+            context.Categories.Add(category4);
+
+            var category5 = new Category()
+            {
+                Name = "Kirándulás",
+            };
+            context.Categories.Add(category5);
+
+
             context.SaveChanges();
 
             return context;
