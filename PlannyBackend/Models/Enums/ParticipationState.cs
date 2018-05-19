@@ -8,7 +8,6 @@ namespace PlannyBackend.Models.Enums
     public enum ParticipationState
     {
         Required,
-        Approved,
-        Refused
+        Approved   
     }
 }

@@ -72,15 +72,15 @@ namespace PlannyBackend.ApiControllers
         }
       
         [HttpGet("myproposals")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDtoWithParticipants>),
            "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()
         {
             var currentUserId = (await _userService.GetCurrentUser()).Id;
 
-            var plannies = new List<PlannyProposalDto>();
+            var plannies = new List<PlannyProposalDtoWithParticipants>();
             plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
-                  .Select(e => new PlannyProposalDto(e)).ToList();            
+                  .Select(e => new PlannyProposalDtoWithParticipants(e)).ToList();            
 
             return Ok(plannies);
         }

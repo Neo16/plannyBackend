@@ -126,6 +126,8 @@ namespace PlannyBackend.Services
             return await _context.PlannyProposals
                .Include(e => e.Location)
                .Include(e => e.Category)
+               .Include(e => e.Participations)
+               .ThenInclude(p => p.User)
                .Where(e => e.Owner.Id == userId)
                .ToListAsync();
         }
