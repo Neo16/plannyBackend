@@ -10,5 +10,7 @@ namespace PlannyBackend.Models.Identity
     public class ApplicationUser : IdentityUser<int>
     {
         public int Age { get; set; }
+
+        public List<Participation> Participations { get; set; }
     }
 }

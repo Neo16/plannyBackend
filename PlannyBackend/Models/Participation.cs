@@ -11,9 +11,9 @@ namespace PlannyBackend.Models
     {
         public int Id { get; set; }
         public ApplicationUser User { get; set; }
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
         public ParticipationState State { get; set; }
-
-
+        public int PlannyProposalId { get; set; }
+        public PlannyProposal PlannyProposal { get; set; }
     }
 }

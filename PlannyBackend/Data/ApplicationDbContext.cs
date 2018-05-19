@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PlannyBackend.Models;
 using PlannyBackend.Models.Identity;
+using PlannyBackend.Data.Configure;
 
 namespace PlannyBackend.Data
 {
@@ -35,6 +36,10 @@ namespace PlannyBackend.Data
             builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
             builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
             #endregion
+
+            builder
+              .ApplyConfiguration(new ParticipationConfiguration());
+
         }       
     }
 }

@@ -236,11 +236,11 @@ namespace PlannyBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("PlannyProposalId");
+                    b.Property<int>("PlannyProposalId");
 
                     b.Property<int>("State");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -364,14 +364,15 @@ namespace PlannyBackend.Migrations
 
             modelBuilder.Entity("PlannyBackend.Models.Participation", b =>
                 {
-                    b.HasOne("PlannyBackend.Models.PlannyProposal")
+                    b.HasOne("PlannyBackend.Models.PlannyProposal", "PlannyProposal")
                         .WithMany("Participations")
-                        .HasForeignKey("PlannyProposalId");
+                        .HasForeignKey("PlannyProposalId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("PlannyBackend.Models.Identity.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Participations")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.SetNull);
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.PlannyProposal", b =>

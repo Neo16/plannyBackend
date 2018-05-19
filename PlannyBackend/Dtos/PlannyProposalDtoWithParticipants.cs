@@ -19,7 +19,7 @@ namespace PlannyBackend.Dtos
                 {
                     ParticipationId = p.Id,
                     State = p.State.ToString(),
-                    UserId = p.UserId,
+                    UserId = p.UserId.Value,
                     UserName = p.User.UserName
                 });
             }

@@ -73,6 +73,7 @@ namespace PlannyBackend.Services
             {
                 State = ParticipationState.Required,
                 User = currentUser,
+                PlannyProposal = proposal
             });
 
             await _context.SaveChangesAsync();
@@ -98,22 +99,39 @@ namespace PlannyBackend.Services
             return await ordered.ToListAsync();
         }
 
-        public async Task ApproveParticipation(int proposalId, int participationId)
+        public async Task ApproveParticipation(int participationId)
         {
-            var proposal = await GetPlannyProposalById(proposalId);
-            var currentUserId = _userService.GetCurrentUser().Id;
+            var currentUserId = (await _userService.GetCurrentUser()).Id;
+            var participation = await _context.Participations
+                .Include(e => e.PlannyProposal)
+                .ThenInclude(e => e.Owner)
+                .Where(e => e.Id == participationId)
+                .SingleAsync();
 
-            if (proposal.OwnerId == currentUserId)
+            if (participation.PlannyProposal.OwnerId == currentUserId)
             {
-                var participation = await _context
-                   .Participations
-                   .Where(e => e.Id == participationId)
-                   .SingleAsync();
-
                 participation.State = ParticipationState.Approved;
-
                 await _context.SaveChangesAsync();
+            }
+            else
+            {
+                //TODO hiba 
+            }
+        }
 
+        public async Task DeclineParticipation(int participationId)
+        {
+            var currentUserId = (await _userService.GetCurrentUser()).Id;
+            var participation = await _context.Participations
+                .Include(e => e.PlannyProposal)
+                .ThenInclude(e => e.Owner)
+                .Where(e => e.Id == participationId)
+                .SingleAsync();
+
+            if (participation.PlannyProposal.OwnerId == currentUserId)
+            {
+                participation.State = ParticipationState.Required;
+                await _context.SaveChangesAsync();
             }
             else
             {

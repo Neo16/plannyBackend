@@ -121,19 +121,27 @@ namespace PlannyBackend.ApiControllers
 
         
         [HttpPost("cancelparticipation")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Succesfully canceled to participate.")]
         public async Task<IActionResult> CancelParticiaption([FromBody] int id)
         {           
             await _plannyService.CancelParticipation(id);
             return Ok("cancel successful");
         }
 
-
-        [HttpGet("approveparticipation/")]       
-        public async Task<IActionResult> ApproveParticipation([FromQuery] int proposalId, [FromQuery] int participationId)
+        [HttpPost("approveparticipation")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Successfully approved participation." )]
+        public async Task<IActionResult> ApproveParticiaption([FromBody] int id)
         {
-            await _plannyService.ApproveParticipation(proposalId, participationId);
-            return Ok();
+            await _plannyService.ApproveParticipation(id);
+            return Ok("approve successful");
+        }
+
+        [HttpPost("declineparticipation")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Successfully declined participation.")]
+        public async Task<IActionResult> DeclineParticiaption([FromBody] int id)
+        {
+            await _plannyService.DeclineParticipation(id);
+            return Ok("decline successful");
         }
 
         [HttpPut("proposals/{id}")]
