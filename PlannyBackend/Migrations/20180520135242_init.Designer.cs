@@ -12,8 +12,8 @@ using System;
 namespace PlannyBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180519185428_setnull")]
-    partial class setnull
+    [Migration("20180520135242_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -372,8 +372,7 @@ namespace PlannyBackend.Migrations
 
                     b.HasOne("PlannyBackend.Models.Identity.ApplicationUser", "User")
                         .WithMany("Participations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.PlannyProposal", b =>

@@ -9,5 +9,7 @@ namespace PlannyBackend.Interfaces
     public interface ICategoryService
     {
         Task<List<Category>> GetCategories();
+        Task<List<Category>> GetMainCategories();
+        Task<List<Category>> GetSubCategories();
     }
 }

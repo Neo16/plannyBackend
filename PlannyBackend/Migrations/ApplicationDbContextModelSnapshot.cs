@@ -371,8 +371,7 @@ namespace PlannyBackend.Migrations
 
                     b.HasOne("PlannyBackend.Models.Identity.ApplicationUser", "User")
                         .WithMany("Participations")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("PlannyBackend.Models.PlannyProposal", b =>

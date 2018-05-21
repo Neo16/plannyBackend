@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PlannyBackend.Migrations
 {
-    public partial class setnull : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -290,7 +290,7 @@ namespace PlannyBackend.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

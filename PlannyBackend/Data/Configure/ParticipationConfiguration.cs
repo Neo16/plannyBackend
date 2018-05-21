@@ -16,7 +16,7 @@ namespace PlannyBackend.Data.Configure
                  .HasOne(p => p.User)
                  .WithMany(u => u.Participations)
                  .HasForeignKey(p => p.UserId)
-                 .OnDelete(DeleteBehavior.SetNull);
+                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder
               .HasOne(p => p.PlannyProposal)

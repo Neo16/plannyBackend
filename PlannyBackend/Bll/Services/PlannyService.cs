@@ -81,17 +81,43 @@ namespace PlannyBackend.Services
 
         public async Task<List<PlannyProposal>> SearchPlannyProposals(ProposalQuery query)
         {
-            var plannies = _context.PlannyProposals.AsQueryable();
+            var plannies = _context.PlannyProposals
+                 .Include(e => e.Category)
+                 .Include(e => e.Location)
+                 .AsQueryable();
+
+            var filtered = plannies;
+               
 
             //kategoriára 
-            var filtered = plannies
-                .Where(e => query.CategoryIds.Contains(e.CategoryId));
+            if (query.CategoryIds.Count > 0)
+            {
+                filtered = filtered.Where(e => query.CategoryIds.Contains(e.CategoryId));
+            }          
 
             //TODO: szűrők kiíróra és résztvevőkre
+            if (query.ParticipantsAgeMax != 0)
+            {
+                filtered = filtered.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
+            }
+
+            if (query.ParticipantsAgeMin != 0)
+            {
+                filtered = filtered.Where(e => e.MinAge >= query.ParticipantsAgeMin);
+            }
 
             //TODO: Szűrők Helyszínre
 
             //TODO: szűrők Dátumra
+            if (query.FromTime != null)
+            {
+                filtered = filtered.Where(e => e.FromTime >= query.FromTime);
+            }
+
+            if (query.ToTime != null)
+            {
+                filtered = filtered.Where(e => e.ToTime <= query.ToTime);
+            }
 
             //TODO order
             var ordered = filtered;

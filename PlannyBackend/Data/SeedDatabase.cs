@@ -48,37 +48,75 @@ namespace PlannyBackend.Data
         private static ApplicationDbContext CreateCategories(this ApplicationDbContext context)
         {
             var category1 = new Category()
-            {               
-                Name = "Kosárlabda",
+            {
+                Name = "sports",
             };
             context.Categories.Add(category1);
 
-
             var category2 = new Category()
             {
-                Name = "Úszás",
+                Name = "movies",
             };
             context.Categories.Add(category2);
 
             var category3 = new Category()
             {
-                Name = "Paintball",
+                Name = "music",
             };
             context.Categories.Add(category3);
 
             var category4 = new Category()
             {
-                Name = "Film",
+                Name = "travel",
             };
             context.Categories.Add(category4);
 
             var category5 = new Category()
             {
-                Name = "Kirándulás",
+                Name = "party",
             };
             context.Categories.Add(category5);
 
+            var category6 = new Category()
+            {
+                Name = "social",
+            };
+            context.Categories.Add(category6);
 
+            var category7 = new Category()
+            {
+                Name = "gaming",
+            };
+            context.Categories.Add(category7);
+
+            var category8 = new Category()
+            {
+                Name = "food",
+            };
+            context.Categories.Add(category8);
+            context.SaveChanges();
+
+            //sub
+            var subCat1 = new Category()
+            {
+                Name = "Basketball",
+                ParentCategoryId = category1.Id
+            };
+            context.Categories.Add(subCat1);
+
+            var subCat2 = new Category()
+            {
+                Name = "Swimming",
+                ParentCategoryId = category1.Id
+            };
+            context.Categories.Add(subCat2);
+
+            var subCat3 = new Category()
+            {
+                Name = "Tennis",
+                ParentCategoryId = category1.Id
+            };
+            context.Categories.Add(subCat3);
             context.SaveChanges();
 
             return context;
