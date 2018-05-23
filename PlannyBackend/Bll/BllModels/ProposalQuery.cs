@@ -31,7 +31,7 @@ namespace PlannyBackend.Bll.BllModels
 
         public bool OnlyAtGivenSettlement { get; set; }
 
-        public double Lonlongitude { get; set; }
+        public double Longitude { get; set; }
         public double Latitude { get; set; }
         public double RangeInKms { get; set; }
 

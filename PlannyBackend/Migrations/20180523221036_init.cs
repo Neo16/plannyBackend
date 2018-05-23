@@ -39,6 +39,21 @@ namespace PlannyBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Location",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Location", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -50,19 +65,6 @@ namespace PlannyBackend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Roles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Settlement",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Settlement", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,24 +116,46 @@ namespace PlannyBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Location",
+                name: "PlannyProposals",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Lonlongitude = table.Column<double>(type: "float", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FromTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsNearOwner = table.Column<bool>(type: "bit", nullable: false),
+                    IsOnlyForFriends = table.Column<bool>(type: "bit", nullable: false),
+                    IsSimilarInterest = table.Column<bool>(type: "bit", nullable: false),
+                    LocationId = table.Column<int>(type: "int", nullable: true),
+                    MaxAge = table.Column<int>(type: "int", nullable: false),
+                    MaxParticipants = table.Column<int>(type: "int", nullable: false),
+                    MinAge = table.Column<int>(type: "int", nullable: false),
+                    MinParticipants = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SettlementId = table.Column<int>(type: "int", nullable: false),
-                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    PictureName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ToTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Location", x => x.Id);
+                    table.PrimaryKey("PK_PlannyProposals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Location_Settlement_SettlementId",
-                        column: x => x.SettlementId,
-                        principalTable: "Settlement",
+                        name: "FK_PlannyProposals_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlannyProposals_Location_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Location",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PlannyProposals_Users_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -222,51 +246,6 @@ namespace PlannyBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlannyProposals",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FromTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsNearOwner = table.Column<bool>(type: "bit", nullable: false),
-                    IsOnlyForFriends = table.Column<bool>(type: "bit", nullable: false),
-                    IsSimilarInterest = table.Column<bool>(type: "bit", nullable: false),
-                    LocationId = table.Column<int>(type: "int", nullable: true),
-                    MaxAge = table.Column<int>(type: "int", nullable: false),
-                    MaxParticipants = table.Column<int>(type: "int", nullable: false),
-                    MinAge = table.Column<int>(type: "int", nullable: false),
-                    MinParticipants = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
-                    PictureName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ToTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlannyProposals", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PlannyProposals_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PlannyProposals_Location_LocationId",
-                        column: x => x.LocationId,
-                        principalTable: "Location",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_PlannyProposals_Users_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Participations",
                 columns: table => new
                 {
@@ -299,11 +278,6 @@ namespace PlannyBackend.Migrations
                 column: "NormalizedName",
                 unique: true,
                 filter: "[NormalizedName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Location_SettlementId",
-                table: "Location",
-                column: "SettlementId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Participations_PlannyProposalId",
@@ -400,9 +374,6 @@ namespace PlannyBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Settlement");
         }
     }
 }

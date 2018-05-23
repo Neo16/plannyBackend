@@ -9,7 +9,7 @@ namespace PlannyBackend.Dtos
     public class LocationDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }  
+        public string Address { get; set; }  
 
         public int SettlementId { get; set; }
 
@@ -23,10 +23,8 @@ namespace PlannyBackend.Dtos
             if (original != null)
             {
                 this.Id = original.Id;
-                this.Latitude = original.Lonlongitude;
-                this.Name = original.Name;
-                this.SettlementId = original.SettlementId;
-                this.StreetAddress = original.StreetAddress;
+                this.Latitude = original.Longitude;
+                this.Address = original.Address;              
             }
                    
         }
@@ -36,9 +34,7 @@ namespace PlannyBackend.Dtos
             var result = new Location();
             result.Id = this.Id;
             result.Latitude = this.Lonlongitude;
-            result.Name = this.Name;
-            result.SettlementId = this.SettlementId;
-            result.StreetAddress = this.StreetAddress;          
+            result.Address = this.Address;             
 
             return result;
         }

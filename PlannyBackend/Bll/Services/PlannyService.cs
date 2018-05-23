@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PlannyBackend.Bll.BllModels;
+using Geolocation;
 
 namespace PlannyBackend.Services
 {
@@ -87,13 +88,13 @@ namespace PlannyBackend.Services
                  .AsQueryable();
 
             var filtered = plannies;
-               
+
 
             //kategoriára 
             if (query.CategoryIds.Count > 0)
             {
                 filtered = filtered.Where(e => query.CategoryIds.Contains(e.CategoryId));
-            }          
+            }
 
             //TODO: szűrők kiíróra és résztvevőkre
             if (query.ParticipantsAgeMax != 0)
@@ -107,14 +108,24 @@ namespace PlannyBackend.Services
             }
 
             //TODO: Szűrők Helyszínre
+            if (query.Longitude != 0 && query.Latitude != 0 && query.RangeInKms != 0)
+            {
+                Coordinate c = new Coordinate()
+                {
+                    Latitude = query.Latitude,
+                    Longitude = query.Longitude
+                };
+
+                filtered = filtered.Where(e => IsInRange(e.Location, c, query.RangeInKms));
+            }
 
             //TODO: szűrők Dátumra
-            if (query.FromTime != null)
+            if (query.FromTime != null && query.FromTime > (DateTime.Now.AddYears(-1)))
             {
                 filtered = filtered.Where(e => e.FromTime >= query.FromTime);
             }
 
-            if (query.ToTime != null)
+            if (query.ToTime != null && query.ToTime > DateTime.Now)
             {
                 filtered = filtered.Where(e => e.ToTime <= query.ToTime);
             }
@@ -124,6 +135,25 @@ namespace PlannyBackend.Services
 
             return await ordered.ToListAsync();
         }
+
+        private bool IsInRange(Location l, Coordinate c, double range)
+        {
+            if (l != null)
+            {
+                var c2 = new Coordinate()
+                {
+                    Longitude = l.Longitude,
+                    Latitude = l.Latitude
+                };
+
+                var d = GeoCalculator.GetDistance(c, c2, 3);
+                return d < range * 0.621371192;
+            }
+
+            return true;
+        }
+
+
 
         public async Task ApproveParticipation(int participationId)
         {

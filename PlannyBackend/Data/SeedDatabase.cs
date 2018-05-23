@@ -124,6 +124,22 @@ namespace PlannyBackend.Data
 
         private static ApplicationDbContext CreatePlannyProposals(this ApplicationDbContext context)
         {
+
+            var location1 = new Location()
+            {
+                Address = "Budapest",
+                Latitude = 47.49801,
+                Longitude = 19.03991,
+            };
+
+            var location2 = new Location()
+            {
+                Address = "Győr",
+                Latitude = 47.68333,
+                Longitude = 17.63512
+            };
+
+
             for (int i = 0; i < 5; i++)
             {
                 var planny = new PlannyProposal()
@@ -141,9 +157,33 @@ namespace PlannyBackend.Data
                     MinAge = 18,
                     MaxParticipants = 10,
                     MinParticipants = 1,
-                    Participations = new List<Participation>() 
+                    Participations = new List<Participation>(),
+                    Location = location1                    
                 };
                 context.PlannyProposals.Add(planny);             
+            }
+
+            for (int i = 5; i < 7; i++)
+            {
+                var planny = new PlannyProposal()
+                {
+                    OwnerId = 1,
+                    Name = "Planny " + i,
+                    Description = "Discription for planny number " + i,
+                    CategoryId = 1,
+                    FromTime = new DateTime().AddDays(7),
+                    ToTime = new DateTime().AddDays(8),
+                    IsNearOwner = false,
+                    IsOnlyForFriends = false,
+                    IsSimilarInterest = false,
+                    MaxAge = 99,
+                    MinAge = 18,
+                    MaxParticipants = 10,
+                    MinParticipants = 1,
+                    Participations = new List<Participation>(),
+                    Location = location2
+                };
+                context.PlannyProposals.Add(planny);
             }
 
             context.SaveChanges();

@@ -12,7 +12,7 @@ using System;
 namespace PlannyBackend.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180520135242_init")]
+    [Migration("20180523221036_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -215,19 +215,13 @@ namespace PlannyBackend.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Address");
+
                     b.Property<double>("Latitude");
 
-                    b.Property<double>("Lonlongitude");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("SettlementId");
-
-                    b.Property<string>("StreetAddress");
+                    b.Property<double>("Longitude");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SettlementId");
 
                     b.ToTable("Location");
                 });
@@ -298,18 +292,6 @@ namespace PlannyBackend.Migrations
                     b.ToTable("PlannyProposals");
                 });
 
-            modelBuilder.Entity("PlannyBackend.Models.Settlement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Settlement");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("PlannyBackend.Models.Identity.ApplicationRole")
@@ -352,14 +334,6 @@ namespace PlannyBackend.Migrations
                     b.HasOne("PlannyBackend.Models.Identity.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("PlannyBackend.Models.Location", b =>
-                {
-                    b.HasOne("PlannyBackend.Models.Settlement", "Settlement")
-                        .WithMany()
-                        .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
