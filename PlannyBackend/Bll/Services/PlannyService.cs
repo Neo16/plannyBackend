@@ -226,5 +226,26 @@ namespace PlannyBackend.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteProposa(int id)
+        {
+            var proposal = await _context.PlannyProposals
+                .Where(e => e.Id == id)
+                .SingleOrDefaultAsync();
+
+            _context.PlannyProposals.Remove(proposal);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Participation>> GetMyParticipations()
+        {
+            var currentUserId = (await _userService.GetCurrentUser()).Id;
+
+            return await _context.Participations             
+                .Include(e => e.PlannyProposal)
+                .Where(e => e.UserId == currentUserId)
+                .ToListAsync();            
+        }
     }
 }

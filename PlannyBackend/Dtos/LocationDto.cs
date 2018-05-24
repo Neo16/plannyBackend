@@ -9,11 +9,7 @@ namespace PlannyBackend.Dtos
     public class LocationDto
     {
         public int Id { get; set; }
-        public string Address { get; set; }  
-
-        public int SettlementId { get; set; }
-
-        public string StreetAddress { get; set; }
+        public string Address { get; set; }        
 
         public double Lonlongitude { get; set; }
         public double Latitude { get; set; }

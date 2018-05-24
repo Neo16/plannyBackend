@@ -23,5 +23,7 @@ namespace PlannyBackend.Interfaces
 
         Task<List<PlannyProposal>> SearchPlannyProposals(ProposalQuery query);
         Task CancelParticipation(int proposalId);
+        Task DeleteProposa(int id);
+        Task<List<Participation>> GetMyParticipations();
     }
 }

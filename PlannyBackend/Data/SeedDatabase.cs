@@ -147,9 +147,9 @@ namespace PlannyBackend.Data
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 1,
-                    FromTime = new DateTime().AddDays(7),
-                    ToTime = new DateTime().AddDays(8),
+                    CategoryId = 9,
+                    FromTime = DateTime.Now.AddDays(7),
+                    ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
                     IsOnlyForFriends = false,
                     IsSimilarInterest = false,
@@ -158,9 +158,10 @@ namespace PlannyBackend.Data
                     MaxParticipants = 10,
                     MinParticipants = 1,
                     Participations = new List<Participation>(),
-                    Location = location1                    
+                    Location = location1,
+                    PictureName = "14548827-e257-4804-9e2a-c681514444af"
                 };
-                context.PlannyProposals.Add(planny);             
+                context.PlannyProposals.Add(planny);
             }
 
             for (int i = 5; i < 7; i++)
@@ -170,9 +171,9 @@ namespace PlannyBackend.Data
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 1,
-                    FromTime = new DateTime().AddDays(7),
-                    ToTime = new DateTime().AddDays(8),
+                    CategoryId = 9,
+                    FromTime = DateTime.Now.AddDays(7),
+                    ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
                     IsOnlyForFriends = false,
                     IsSimilarInterest = false,
@@ -181,7 +182,8 @@ namespace PlannyBackend.Data
                     MaxParticipants = 10,
                     MinParticipants = 1,
                     Participations = new List<Participation>(),
-                    Location = location2
+                    Location = location2,
+                    PictureName = "14548827-e257-4804-9e2a-c681514444af"
                 };
                 context.PlannyProposals.Add(planny);
             }
@@ -189,5 +191,5 @@ namespace PlannyBackend.Data
             context.SaveChanges();
             return context;
         }
-    } 
+    }
 }

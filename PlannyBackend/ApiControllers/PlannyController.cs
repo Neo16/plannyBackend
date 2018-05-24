@@ -154,8 +154,18 @@ namespace PlannyBackend.ApiControllers
         [HttpDelete("proposals/{id}")]
         public async Task<IActionResult> DeleteProposal(int id)
         {
-            //TODO
-            return Ok();
+            await _plannyService.DeleteProposa(id);
+            return Ok("delete succesfull");
+        }
+
+        [HttpGet("myparticipations")]
+        public async Task<IActionResult> GetMyParticipations()
+        {
+            var part = (await _plannyService.GetMyParticipations())
+                .Select(e => new MyParticipationDto(e))
+                .ToList();           
+
+            return Ok(part);
         }
 
     }

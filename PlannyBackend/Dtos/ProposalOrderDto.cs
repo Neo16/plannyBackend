@@ -7,5 +7,6 @@ namespace PlannyBackend.Dtos
 {
     public class ProposalOrderDto
     {
+      
     }
 }
