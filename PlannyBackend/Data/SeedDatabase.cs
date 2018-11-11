@@ -75,7 +75,7 @@ namespace PlannyBackend.Data
             {
                 Name = "party",
             };
-            context.Categories.Add(category5);
+            context.Categories.Add(category5);            
 
             var category6 = new Category()
             {
@@ -93,7 +93,16 @@ namespace PlannyBackend.Data
             {
                 Name = "food",
             };
-            context.Categories.Add(category8);
+            context.Categories.Add(category8);    
+
+            for(int i = 1; i <= 8; i++)
+            {
+                var cat = new Category()
+                {
+                    Name = "category" + i,
+                };
+                context.Categories.Add(cat);
+            }
             context.SaveChanges();
 
             //sub
@@ -147,7 +156,7 @@ namespace PlannyBackend.Data
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 9,
+                    CategoryId = 17,
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
@@ -171,7 +180,7 @@ namespace PlannyBackend.Data
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 9,
+                    CategoryId = 17,
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
