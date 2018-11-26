@@ -87,46 +87,55 @@ namespace PlannyBackend.Services
 
             var filtered = plannies;
 
-
-            //kategoriára 
-            if (query.CategoryIds.Count > 0)
+            if (query == null)
             {
-                filtered = filtered.Where(e => query.CategoryIds.Contains(e.CategoryId));
+                filtered = filtered
+                   //Todo legyen hozzáadás dátuma a plannyn 
+                   .OrderBy(e => e.FromTime)
+                   .Take(30);
             }
-
-            //TODO: szűrők kiíróra és résztvevőkre
-            if (query.ParticipantsAgeMax != 0)
+            else
             {
-                filtered = filtered.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
-            }
-
-            if (query.ParticipantsAgeMin != 0)
-            {
-                filtered = filtered.Where(e => e.MinAge >= query.ParticipantsAgeMin);
-            }
-
-            //TODO: Szűrők Helyszínre
-            if (query.Longitude != 0 && query.Latitude != 0 && query.RangeInKms != 0)
-            {
-                Coordinate c = new Coordinate()
+                //kategoriára 
+                if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
-                    Latitude = query.Latitude,
-                    Longitude = query.Longitude
-                };
+                    filtered = filtered.Where(e => query.CategoryIds.Contains(e.CategoryId));
+                }
 
-                filtered = filtered.Where(e => IsInRange(e.Location, c, query.RangeInKms));
-            }
+                //TODO: szűrők kiíróra és résztvevőkre
+                if (query.ParticipantsAgeMax != 0)
+                {
+                    filtered = filtered.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
+                }
 
-            //TODO: szűrők Dátumra
-            if (query.FromTime != null && query.FromTime > (DateTime.Now.AddYears(-1)))
-            {
-                filtered = filtered.Where(e => e.FromTime >= query.FromTime);
-            }
+                if (query.ParticipantsAgeMin != 0)
+                {
+                    filtered = filtered.Where(e => e.MinAge >= query.ParticipantsAgeMin);
+                }
 
-            if (query.ToTime != null && query.ToTime > DateTime.Now)
-            {
-                filtered = filtered.Where(e => e.ToTime <= query.ToTime);
-            }
+                //TODO: Szűrők Helyszínre
+                if (query.Longitude != 0 && query.Latitude != 0 && query.RangeInKms != 0)
+                {
+                    Coordinate c = new Coordinate()
+                    {
+                        Latitude = query.Latitude,
+                        Longitude = query.Longitude
+                    };
+
+                    filtered = filtered.Where(e => IsInRange(e.Location, c, query.RangeInKms));
+                }
+
+                //TODO: szűrők Dátumra
+                if (query.FromTime != null && query.FromTime > (DateTime.Now.AddYears(-1)))
+                {
+                    filtered = filtered.Where(e => e.FromTime >= query.FromTime);
+                }
+
+                if (query.ToTime != null && query.ToTime > DateTime.Now)
+                {
+                    filtered = filtered.Where(e => e.ToTime <= query.ToTime);
+                }
+            }                 
 
             //TODO order
             var ordered = filtered;

@@ -52,23 +52,12 @@ namespace PlannyBackend.ApiControllers
         [AllowAnonymous]
         [HttpPost("proposals")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
-            "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
+            "Returns list of planny proposals by filtered in the query object, or the 30 newest if the query object is null. ")]
         public async Task<IActionResult> GetPlannies([FromBody] ProposalQueryDto query = null)
-        {
-            var plannies = new List<PlannyProposalDto>();
-            var currentUserId = await _currentUserService.GetCurrentUserId();
-            if (query != null)
-            {
-                plannies = (await _plannyService.SearchPlannyProposals(query.ToEntity()))
-                    .Select(e => new PlannyProposalDto(e)).ToList();
-            }
-
-            else
-            {
-                plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
-                  .Select(e => new PlannyProposalDto(e)).ToList();
-            }
-            
+        {            
+            var plannies = new List<PlannyProposalDto>();  
+                plannies = (await _plannyService.SearchPlannyProposals(query?.ToEntity()))
+                   .Select(e => new PlannyProposalDto(e)).ToList();                    
             return Ok(plannies);
         }
       

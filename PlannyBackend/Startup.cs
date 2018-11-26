@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Http;
 using PlannyBackend.Common.Configurations;
 using PlannyBackend.DAL;
 using PlannyBackend.Web.WebServices;
+using PlannyBackend.Web.Middlewares;
 
 namespace PlannyBackend.Web
 {
@@ -124,6 +125,7 @@ namespace PlannyBackend.Web
             );
 
             app.UseStaticFiles();
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseAuthentication();
             app.UseSwagger();
 
