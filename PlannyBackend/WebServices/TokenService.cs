@@ -33,7 +33,7 @@ namespace PlannyBackend.Web.WebServices
             _tokenConfiguration = tokenConfiguration.Value;
         }
 
-        public async Task<TokenDto> GetTokenForUserAsync(ApplicationUser user)
+        public async Task<string> GetTokenForUserAsync(ApplicationUser user)
         {
 
             var tokenDescriptor = new SecurityTokenDescriptor()
@@ -50,10 +50,7 @@ namespace PlannyBackend.Web.WebServices
 
             if (res.Succeeded)
             {
-                return new TokenDto
-                {
-                    AccessToken = accessToken,
-                };
+                return accessToken;
             }
 
             else

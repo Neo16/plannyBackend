@@ -33,7 +33,7 @@ namespace PlannyBackend.Web.ApiControllers
         }
 
         [HttpPost("login")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(TokenDto), "JWT access token returned")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(LoginResultDto), "Login result returned")]
         [SwaggerResponse((int)HttpStatusCode.BadRequest, null, "Wrong username or password")]
         public async Task<IActionResult> Login([FromBody] LoginDto model)
         {    
@@ -45,7 +45,11 @@ namespace PlannyBackend.Web.ApiControllers
                 return BadRequest("Invalid username or password.");
             }
             var token = await _tokenService.GetTokenForUserAsync(user);
-            return Ok(token);
+            return Ok(new LoginResultDto()
+            {
+                UserName = user.UserName,
+                UserToken = token
+            });
         }
 
         [HttpPost("register")]
