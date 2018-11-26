@@ -17,7 +17,7 @@ namespace PlannyBackend.Web.WebServices
         private readonly JwtSecurityTokenHandler _accessTokenHandler;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly TokenConfiguration tokenConfiguration;      
+        private readonly TokenConfiguration _tokenConfiguration;      
 
         public TokenService(           
             SignInManager<ApplicationUser> signInManager,
@@ -30,6 +30,7 @@ namespace PlannyBackend.Web.WebServices
             {
                 TokenLifetimeInMinutes = (int)(TimeSpan.FromDays(1)).TotalMinutes
             };
+            _tokenConfiguration = tokenConfiguration.Value;
         }
 
         public async Task<TokenDto> GetTokenForUserAsync(ApplicationUser user)
@@ -38,7 +39,7 @@ namespace PlannyBackend.Web.WebServices
             var tokenDescriptor = new SecurityTokenDescriptor()
             {                      
                 Issuer = "https://localhost:44381/",
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfiguration.SigningKey)), SecurityAlgorithms.HmacSha256),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenConfiguration.SigningKey)), SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity((await _signInManager.CreateUserPrincipalAsync(user)).Claims),
             };
 
