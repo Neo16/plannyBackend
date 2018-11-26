@@ -1,38 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PlannyBackend.Dtos.Account;
 using Microsoft.AspNetCore.Identity;
 using PlannyBackend.Models.Identity;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using PlannyBackend.Bll.Interfaces;
 using PlannyBackend.Interfaces;
+using PlannyBackend.Web.WebServices;
+using PlannyBackend.Web.Dtos.Account;
 
-namespace PlannyBackend.ApiControllers
+namespace PlannyBackend.Web.ApiControllers
 {
-
     [Produces("application/json")]
     [Route("api/Account")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ITokenService _tokenService;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly TokenService _tokenService;
         private readonly IUserService _userService;
 
         public AccountController(
-            ITokenService tokenService,
+           TokenService tokenService,
            UserManager<ApplicationUser> userManager,
+           SignInManager<ApplicationUser> signInManager,
            IUserService userService
           )
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _userService = userService;
+            _signInManager = signInManager;
         }
 
         [HttpPost("login")]
@@ -69,6 +66,7 @@ namespace PlannyBackend.ApiControllers
 
             if (success)
             {
+                await _signInManager.SignInAsync(user, isPersistent: false);
                 return Ok("Registration sucessful.");
             }
             else

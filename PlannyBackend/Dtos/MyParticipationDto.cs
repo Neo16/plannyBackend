@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PlannyBackend.Models;
 
-namespace PlannyBackend.Dtos
+namespace PlannyBackend.Web.Dtos
 {
     public class MyParticipationDto
     {

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PlannyBackend.Data;
 using PlannyBackend.Interfaces;
 using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using PlannyBackend.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace PlannyBackend.ApiControllers
+
+namespace PlannyBackend.Web.ApiControllers
 {
     [Produces("application/json")]
     [Route("api/categories")]    

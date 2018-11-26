@@ -1,22 +1,17 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PlannyBackend.Data;
-using PlannyBackend.Models;
 using PlannyBackend.Services;
 using PlannyBackend.Interfaces;
 using PlannyBackend.Models.Identity;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using PlannyBackend.Bll.Interfaces;
@@ -24,25 +19,29 @@ using PlannyBackend.Bll.Services;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using PlannyBackend.Common.Configurations;
+using PlannyBackend.DAL;
+using PlannyBackend.Web.WebServices;
 
-namespace PlannyBackend
+namespace PlannyBackend.Web
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         private IConfigurationSection ConfigurationSectionAzureBlob { get; }
+        private IConfigurationSection ConfigurationSectionToken { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
             ConfigurationSectionAzureBlob = Configuration.GetSection("AzureBlob");
-        }
-
-        public IConfiguration Configuration { get; }
+            ConfigurationSectionToken = configuration.GetSection("Token");
+        }      
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AzureBlobConfiguration>(ConfigurationSectionAzureBlob);
+            services.Configure<TokenConfiguration>(ConfigurationSectionToken);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -59,7 +58,9 @@ namespace PlannyBackend
                   options.SaveToken = true;
                   options.TokenValidationParameters = new TokenValidationParameters
                   {
-                      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd_asd")),
+                      IssuerSigningKey = new SymmetricSecurityKey(
+                         Encoding.UTF8.GetBytes(ConfigurationSectionToken.Get<TokenConfiguration>().SigningKey)
+                      ),
                       ValidateAudience = false,
                       ValidIssuer = "https://localhost:44381/"
                   };
@@ -70,7 +71,8 @@ namespace PlannyBackend
             services.AddTransient<IPlannyService, PlannyService>();
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient<TokenService>();
+            services.AddTransient<CurrentUserService>();
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IFileService, FileService>();

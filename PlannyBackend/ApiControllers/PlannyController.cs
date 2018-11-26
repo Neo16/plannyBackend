@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PlannyBackend.Dtos;
-using PlannyBackend.Models;
 using PlannyBackend.Interfaces;
 using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PlannyBackend.Bll.Interfaces;
-using PlannyBackend.Models.Enums;
+using PlannyBackend.Web.Dtos;
+using PlannyBackend.Web.WebServices;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -24,24 +22,26 @@ namespace PlannyBackend.ApiControllers
         private readonly IPlannyService _plannyService;
         private readonly IUserService _userService;
         private readonly IFileService _fileService;
+        private readonly CurrentUserService _currentUserService;
 
         public PlannyController(
             IFileService fileService,
             IUserService userService,
-            IPlannyService plannyService)
+            IPlannyService plannyService, 
+            CurrentUserService currentUserService)
         {
             _fileService = fileService; 
             _userService = userService;
             _plannyService = plannyService;
+            _currentUserService = currentUserService;
         }
         
         [HttpPost]      
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Creates a planny proposal owned by the user logged in. Returns created planny proposal.")]
         public async Task<IActionResult> CreatePlanny([FromBody] CreatePlannyProposalDto planny)
         {
-            // todo: validáció            
-            var currentUser = await _userService.GetCurrentUser();
-            var currentUserId = currentUser.Id;
+
+            var currentUserId = await _currentUserService.GetCurrentUserId();
             planny.OwnerId = currentUserId;
            
             var plannyEnt = planny.ToEntity();         
@@ -56,6 +56,7 @@ namespace PlannyBackend.ApiControllers
         public async Task<IActionResult> GetPlannies([FromBody] ProposalQueryDto query = null)
         {
             var plannies = new List<PlannyProposalDto>();
+            var currentUserId = await _currentUserService.GetCurrentUserId();
             if (query != null)
             {
                 plannies = (await _plannyService.SearchPlannyProposals(query.ToEntity()))
@@ -64,7 +65,7 @@ namespace PlannyBackend.ApiControllers
 
             else
             {
-                plannies = (await _plannyService.GetPlannyProposals())
+                plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
                   .Select(e => new PlannyProposalDto(e)).ToList();
             }
             
@@ -76,7 +77,7 @@ namespace PlannyBackend.ApiControllers
            "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()
         {
-            var currentUserId = (await _userService.GetCurrentUser()).Id;
+            var currentUserId = await _currentUserService.GetCurrentUserId();
 
             var plannies = new List<PlannyProposalDtoWithParticipants>();
             plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
@@ -89,7 +90,7 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Returns a planny proposals of given Id.")]
         public async Task<IActionResult> GetPlannyProposal(int id)
         {
-            var currentUserId = (await _userService.GetCurrentUser()).Id;
+            var currentUserId = await _currentUserService.GetCurrentUserId();
             var plannyObj = await _plannyService.GetPlannyProposalById(id);
             var participation = plannyObj.Participations
                 .Where(p => p.UserId == currentUserId)
@@ -114,8 +115,9 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
         public async Task<IActionResult> JoinPlannyProposal(int id)
         {
+            var currentUserId = await _currentUserService.GetCurrentUserId();
             //todo check, hogy van-e ilyen proposal és tudok-e rá jelentkezni
-            await _plannyService.JoinProposal(id);
+            await _plannyService.JoinProposal(id, currentUserId);
             return Ok(id);
         }
 
@@ -123,8 +125,9 @@ namespace PlannyBackend.ApiControllers
         [HttpPost("cancelparticipation")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Succesfully canceled to participate.")]
         public async Task<IActionResult> CancelParticiaption([FromBody] int id)
-        {           
-            await _plannyService.CancelParticipation(id);
+        {
+            var currentUserId = await _currentUserService.GetCurrentUserId();
+            await _plannyService.CancelParticipation(id, currentUserId);
             return Ok("cancel successful");
         }
 
@@ -132,7 +135,8 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Successfully approved participation." )]
         public async Task<IActionResult> ApproveParticiaption([FromBody] int id)
         {
-            await _plannyService.ApproveParticipation(id);
+            var currentUserId = await _currentUserService.GetCurrentUserId();
+            await _plannyService.ApproveParticipation(id, currentUserId);
             return Ok("approve successful");
         }
 
@@ -140,7 +144,8 @@ namespace PlannyBackend.ApiControllers
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Successfully declined participation.")]
         public async Task<IActionResult> DeclineParticiaption([FromBody] int id)
         {
-            await _plannyService.DeclineParticipation(id);
+            var currentUserId = await _currentUserService.GetCurrentUserId();
+            await _plannyService.DeclineParticipation(id, currentUserId);
             return Ok("decline successful");
         }
 
@@ -161,7 +166,8 @@ namespace PlannyBackend.ApiControllers
         [HttpGet("myparticipations")]
         public async Task<IActionResult> GetMyParticipations()
         {
-            var part = (await _plannyService.GetMyParticipations())
+            var currentUserId = await _currentUserService.GetCurrentUserId();
+            var part = (await _plannyService.GetParticipationsForUser(currentUserId))
                 .Select(e => new MyParticipationDto(e))
                 .ToList();           
 
