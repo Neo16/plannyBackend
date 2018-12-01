@@ -2,78 +2,46 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.WindowsAzure.Storage.Blob;
 using System.IO;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.Extensions.Options;
-using PlannyBackend.Common.Configurations;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Hosting;
 
 namespace PlannyBackend.Bll.Services
 {
     public class FileService : IFileService
     {
-        private readonly AzureBlobConfiguration _blobConfiguration;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public FileService(IOptions<AzureBlobConfiguration> blobOptions)
+        public FileService(IHostingEnvironment hostingEnvironment)
         {
-            _blobConfiguration = blobOptions.Value;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<string> DowloadPlannyPicture(string pictureName)
+        public async Task<string> UploadPicture(IFormFile picture)
         {
-            if (pictureName != null)
-            {
-                CloudBlobContainer container = getPictureContainer();
-                CloudBlockBlob picBlob = container.GetBlockBlobReference(pictureName);
-
-                using (var ms = new MemoryStream())
-                {
-                    var requestOptions = new BlobRequestOptions()
-                    {
-                        MaximumExecutionTime = TimeSpan.FromSeconds(2)
-                    };
-                    try
-                    {
-                        if (await picBlob.ExistsAsync(requestOptions, null))
-                        {
-                            await picBlob.DownloadToStreamAsync(ms);
-                            ms.Seek(0, SeekOrigin.Begin);
-
-                            string imageBase64Data = Convert.ToBase64String(ms.ToArray());
-                            var pic = string.Format("data:image/png;base64,{0}", imageBase64Data);
-                            return pic;
-                        }
-                        return null;
-                    }
-                    catch (StorageException e)
-                    {
-                        return null;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public async Task<string> UploadPlannyPicture(IFormFile picture)
-        {
-
             if (picture != null)
             {
                 var fileName = (Guid.NewGuid()).ToString();
-                CloudBlobContainer container = getPictureContainer();
-
-                CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
-                await blob.UploadFromStreamAsync(picture.OpenReadStream());
+                await UploadFiles(new List<(IFormFile data, string fileName)>() { (picture, fileName) }, "pictures");   
                 return fileName;
             }
             return null;
         }
 
-        private CloudBlobContainer getPictureContainer()
+        public async Task UploadFiles(IList<(IFormFile data, string fileName)> files, string destinationFolderPath)
         {
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(_blobConfiguration.ConnectionString);
-            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            return blobClient.GetContainerReference("pictures-container");
+            var uploads = Path.Combine(hostingEnvironment.WebRootPath, destinationFolderPath);
+            foreach (var file in files)
+            {
+                if (file.data.Length > 0)
+                {
+                    var filePath = Path.Combine(uploads, file.fileName);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.data.CopyToAsync(fileStream);
+                    }
+                }
+            }            
         }
     }
 }

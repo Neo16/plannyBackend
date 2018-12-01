@@ -8,9 +8,7 @@ namespace PlannyBackend.Bll.Interfaces
 {
     public interface IFileService
     {
-        Task<string> UploadPlannyPicture(IFormFile picture);
-
-        Task<string> DowloadPlannyPicture(string pictureName);
+        Task<string> UploadPicture(IFormFile picture); 
 
     }
 }

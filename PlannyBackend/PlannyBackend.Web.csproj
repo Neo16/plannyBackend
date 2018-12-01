@@ -38,6 +38,10 @@
     <ProjectReference Include="..\PlannyBackend.Model\PlannyBackend.Model.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\pictures\" />
+  </ItemGroup>
+
 
 
 </Project>

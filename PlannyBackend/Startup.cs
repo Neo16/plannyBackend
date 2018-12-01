@@ -31,11 +31,14 @@ namespace PlannyBackend.Web
         private IConfigurationSection ConfigurationSectionAzureBlob { get; }
         private IConfigurationSection ConfigurationSectionToken { get; }
 
-        public Startup(IConfiguration configuration)
+        private IHostingEnvironment hostingEnvironment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
             Configuration = configuration;
             ConfigurationSectionAzureBlob = Configuration.GetSection("AzureBlob");
             ConfigurationSectionToken = configuration.GetSection("Token");
+            this.hostingEnvironment = hostingEnvironment;
         }      
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -76,6 +79,7 @@ namespace PlannyBackend.Web
             services.AddTransient<CurrentUserService>();
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton(hostingEnvironment);
             services.AddTransient<IFileService, FileService>();
             services.AddCors();
             services.AddMvc();
