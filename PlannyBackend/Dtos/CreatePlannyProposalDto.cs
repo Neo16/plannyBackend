@@ -28,7 +28,7 @@ namespace PlannyBackend.Web.Dtos
         public bool IsNearOwner { get; set; }
         public bool IsSimilarInterest { get; set; }
         public int OwnerId { get; set; }
-        public string PictureName { get; set; }
+        public string PictureUrl { get; set; }
 
         public PlannyProposal ToEntity()
         {
@@ -46,7 +46,7 @@ namespace PlannyBackend.Web.Dtos
             result.IsNearOwner = this.IsNearOwner;
             result.IsSimilarInterest = this.IsSimilarInterest;
             result.OwnerId = this.OwnerId;
-            result.PictureName = this.PictureName;
+            result.PictureUrl = this.PictureUrl;
 
             if (this.Location != null)
             {

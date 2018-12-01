@@ -23,12 +23,14 @@ namespace PlannyBackend.Web.ApiControllers
         }
 
         [HttpPost]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
+        [Route("upload-picture")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme), SwaggerResponse((int)HttpStatusCode.Unauthorized, null, "You are not authorized")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Upload a cover picture for a planny proposal.")]
         public async Task<IActionResult> UploadPlannyPicture([FromForm] IFormFile Picture)
         {          
             var pictureName = await _fileService.UploadPicture(Picture);
-            return Ok(pictureName);
+            var pictureUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}/pictures/{pictureName}";
+            return Ok(pictureUrl);
         }      
     }
 }

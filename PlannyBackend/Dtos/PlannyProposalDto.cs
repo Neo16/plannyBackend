@@ -49,7 +49,7 @@ namespace PlannyBackend.Web.Dtos
             this.IsOnlyForFriends = original.IsOnlyForFriends;
             this.IsNearOwner = original.IsNearOwner;
             this.IsSimilarInterest = original.IsSimilarInterest;
-            this.PictureName = original.PictureName;
+            this.PictureName = original.PictureUrl;
             this.CategoryNames = new string[3];
             this.CategoryNames[0] = original.Category.Name;
 

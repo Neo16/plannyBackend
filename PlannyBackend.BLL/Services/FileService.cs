@@ -21,8 +21,9 @@ namespace PlannyBackend.Bll.Services
         {
             if (picture != null)
             {
-                var fileName = (Guid.NewGuid()).ToString();
-                await UploadFiles(new List<(IFormFile data, string fileName)>() { (picture, fileName) }, "pictures");   
+                var extension = Path.GetExtension(picture.FileName);
+                var fileName = (Guid.NewGuid()).ToString() + extension;
+                await UploadFiles(new List<(IFormFile data, string fileName)>() { (picture, fileName) }, "pictures");
                 return fileName;
             }
             return null;

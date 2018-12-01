@@ -28,7 +28,7 @@ namespace PlannyBackend.Models
 
         public int CategoryId { get; set; }
 
-        public string PictureName { get; set; }
+        public string PictureUrl { get; set; }
 
         #region participation conditions
 
