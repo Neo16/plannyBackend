@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PlannyBackend.Interfaces;
 using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using PlannyBackend.Models;
+using PlannyBackend.Model;
 
 
 namespace PlannyBackend.Web.ApiControllers

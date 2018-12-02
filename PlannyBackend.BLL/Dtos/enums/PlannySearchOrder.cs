@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Bll.BllModels
+namespace PlannyBackend.Bll.Dtos.enums
 {
-    public class ProposalOrder
+    public enum PlannySearchOrder
     {
+        UploadTime,
+        Distance
     }
 }

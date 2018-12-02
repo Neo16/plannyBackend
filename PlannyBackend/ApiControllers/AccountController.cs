@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model.Identity;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Net;
 using PlannyBackend.Interfaces;
 using PlannyBackend.Web.WebServices;
-using PlannyBackend.Web.Dtos.Account;
+using PlannyBackend.Bll.Dtos.Account;
+using AutoMapper;
 
 namespace PlannyBackend.Web.ApiControllers
 {
@@ -65,7 +66,7 @@ namespace PlannyBackend.Web.ApiControllers
                 return BadRequest("Please fill al fields.");
             }
 
-            var user = model.toApplicationUser();
+            ApplicationUser user = Mapper.Map<ApplicationUser>(model);
             var (success, error) = await _userService.RegisterUser(user, model.Password);
 
             if (success)

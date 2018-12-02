@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PlannyBackend.Models;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model;
+using PlannyBackend.Model.Identity;
 using PlannyBackend.DAL.Configure;
 
 namespace PlannyBackend.DAL
@@ -10,7 +10,8 @@ namespace PlannyBackend.DAL
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int>
     {
         public virtual DbSet<Participation> Participations { get; set; }
-        public virtual DbSet<PlannyProposal> PlannyProposals { get; set; }
+        public virtual DbSet<Planny> Plannies { get; set; }
+        public virtual DbSet<PlannyCategory> PlannyCategories { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -34,7 +35,8 @@ namespace PlannyBackend.DAL
             #endregion
 
             builder
-              .ApplyConfiguration(new ParticipationConfiguration());
+              .ApplyConfiguration(new ParticipationConfiguration())
+              .ApplyConfiguration(new PlannyCategoryConfiguration());
 
         }       
     }

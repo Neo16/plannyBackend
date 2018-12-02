@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using PlannyBackend.BLL.Exceptions;
-using PlannyBackend.Web.Dtos;
+using PlannyBackend.Bll.Dtos;
 using System;
 using System.Net;
 using System.Threading.Tasks;

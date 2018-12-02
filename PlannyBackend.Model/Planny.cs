@@ -1,12 +1,12 @@
-﻿using PlannyBackend.Models.Identity;
+﻿using PlannyBackend.Model.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Models
+namespace PlannyBackend.Model
 {
-    public class PlannyProposal
+    public class Planny
     {
         public int Id { get; set; }
 
@@ -24,9 +24,7 @@ namespace PlannyBackend.Models
 
         public List<Participation> Participations { get; set; }
 
-        public Category Category { get; set; }
-
-        public int CategoryId { get; set; }
+        public ICollection<PlannyCategory> PlannyCategories { get; set; }    
 
         public string PictureUrl { get; set; }
 

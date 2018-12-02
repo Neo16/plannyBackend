@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PlannyBackend.Services;
 using PlannyBackend.Interfaces;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model.Identity;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using System.Reflection;

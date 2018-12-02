@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlannyBackend.Models;
+using PlannyBackend.Model;
 using Microsoft.EntityFrameworkCore;
 using PlannyBackend.DAL;
 

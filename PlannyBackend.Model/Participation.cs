@@ -1,11 +1,11 @@
-﻿using PlannyBackend.Models.Enums;
-using PlannyBackend.Models.Identity;
+﻿using PlannyBackend.Model.Enums;
+using PlannyBackend.Model.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Models
+namespace PlannyBackend.Model
 {
     public class Participation
     {
@@ -14,6 +14,6 @@ namespace PlannyBackend.Models
         public int? UserId { get; set; }
         public ParticipationState State { get; set; }
         public int PlannyProposalId { get; set; }
-        public PlannyProposal PlannyProposal { get; set; }
+        public Planny Planny { get; set; }
     }
 }

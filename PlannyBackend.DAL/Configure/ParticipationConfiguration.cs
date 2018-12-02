@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PlannyBackend.Models;
+using PlannyBackend.Model;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace PlannyBackend.DAL.Configure
@@ -15,7 +15,7 @@ namespace PlannyBackend.DAL.Configure
                  .OnDelete(DeleteBehavior.ClientSetNull);
 
             builder
-              .HasOne(p => p.PlannyProposal)
+              .HasOne(p => p.Planny)
               .WithMany(planny => planny.Participations)
               .HasForeignKey(p => p.PlannyProposalId)
               .OnDelete(DeleteBehavior.Cascade);

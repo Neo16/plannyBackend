@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Web.Dtos.Account
+namespace PlannyBackend.Bll.Dtos.Account
 {
-    public class LoginResultDto
+    public class LoginDto
     {
-        public string UserToken { get; set; }
-
         public string UserName { get; set; }
+
+        public string Password { get; set; }
     }
 }

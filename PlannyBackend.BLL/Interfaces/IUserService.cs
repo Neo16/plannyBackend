@@ -1,4 +1,4 @@
-﻿using PlannyBackend.Models.Identity;
+﻿using PlannyBackend.Model.Identity;
 using System;
 using System.Threading.Tasks;
 

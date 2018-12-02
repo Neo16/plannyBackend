@@ -1,14 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlannyBackend.Interfaces;
-using PlannyBackend.Models;
-using PlannyBackend.Models.Enums;
+using PlannyBackend.Model;
+using PlannyBackend.Model.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PlannyBackend.Bll.BllModels;
 using Geolocation;
 using PlannyBackend.DAL;
+using PlannyBackend.Bll.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using PlannyBackend.BLL.Exceptions;
 
 namespace PlannyBackend.Services
 {
@@ -26,44 +29,62 @@ namespace PlannyBackend.Services
 
         }
 
-        public async Task CreatePlanny(PlannyProposal planny)
+        public async Task CreatePlanny(CreateEditPlannyDto planny)
         {
-            _context.PlannyProposals.Add(planny);
+            Planny plannyEnt = Mapper.Map<Planny>(planny);
+            _context.Plannies.Add(plannyEnt);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<PlannyProposal>> GetPlannyProposalsOfUser(int userId)
+        public async Task UpdatePlanny(int id, CreateEditPlannyDto planny, int userId)
         {
-            return await _context.PlannyProposals
-               .Include(e => e.Location)
-               .Include(e => e.Category)
-               .Include(e => e.Participations)
-               .ThenInclude(p => p.User)
+            Planny oldPlannyEnt = await _context.Plannies
+                .Where(e => e.Owner.Id == userId)
+                .Where(e => e.Id == id)
+                .SingleOrDefaultAsync();
+
+            if (oldPlannyEnt == null)
+            {
+                throw new BusinessLogicException("Invalid update request.") { ErrorCode = ErrorCode.InvalidArgument };
+            }
+            Planny newplannyEnt = Mapper.Map<Planny>(planny);
+
+            newplannyEnt.Id = oldPlannyEnt.Id;
+            foreach (var plannyCategory in newplannyEnt.PlannyCategories)
+            {
+                plannyCategory.Category = null;
+                plannyCategory.PlannyId = newplannyEnt.Id;
+            }
+            if (oldPlannyEnt.PlannyCategories != null && oldPlannyEnt.PlannyCategories.Count() > 0)
+            {
+                _context.PlannyCategories.RemoveRange(oldPlannyEnt.PlannyCategories);
+            }
+
+            _context.PlannyCategories.AddRange(newplannyEnt.PlannyCategories);
+            _context.Entry(oldPlannyEnt).CurrentValues.SetValues(newplannyEnt);
+            await _context.SaveChangesAsync();      
+        }
+
+        public async Task<List<PlannyDtoWithParticipants>> GetPlanniesOfUser(int userId)
+        {
+            return await _context.Plannies
                .Where(e => e.Owner.Id == userId)
+               .ProjectTo<PlannyDtoWithParticipants>()
                .ToListAsync();
         }
 
-        public async Task<PlannyProposal> GetPlannyProposalById(int Id)
+        public async Task<PlannyDtoWithParticipants> GetByIdWithParticipants(int Id)
         {
-            return await _context.PlannyProposals
-                .Include(e => e.Location)
-                .Include(e => e.Participations)
-                .Include(e => e.Category)
-                .Where(e => e.Id == Id)
-                .FirstOrDefaultAsync();
+            return await _context.Plannies
+               .Where(e => e.Id == Id)
+               .ProjectTo<PlannyDtoWithParticipants>()
+               .FirstOrDefaultAsync();
         }
+    
 
-        public async Task<List<PlannyProposal>> GetPlannyProposals()
-        {
-            return await _context.PlannyProposals
-                .Include(e => e.Category)
-                .Include(e => e.Location)
-                .ToListAsync();
-        }
-
-        public async Task JoinProposal(int id, int currentUserId)
+        public async Task Join(int id, int currentUserId)
         {          
-            var proposal = await _context.PlannyProposals
+            var proposal = await _context.Plannies
                 .Where(e => e.Id == id)
                 .Include(e => e.Participations)
                 .FirstAsync();
@@ -72,17 +93,15 @@ namespace PlannyBackend.Services
             {
                 State = ParticipationState.Required,
                 UserId = currentUserId,
-                PlannyProposal = proposal
+                Planny = proposal
             });
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<PlannyProposal>> SearchPlannyProposals(ProposalQuery query)
+        public async Task<List<PlannyDto>> SearchPlannies(PlannyQueryDto query)
         {
-            var plannies = _context.PlannyProposals
-                 .Include(e => e.Category)
-                 .Include(e => e.Location)
+            var plannies = _context.Plannies                 
                  .AsQueryable();
 
             var filtered = plannies;
@@ -99,10 +118,11 @@ namespace PlannyBackend.Services
                 //kategoriára 
                 if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
-                    filtered = filtered.Where(e => query.CategoryIds.Contains(e.CategoryId));
+                    var filteredCategoryIds = query.CategoryIds;
+                    filtered = filtered.Where(e => e.PlannyCategories.Any( c => filteredCategoryIds.Contains(c.CategoryId)));
                 }
 
-                //TODO: szűrők kiíróra és résztvevőkre
+                //szűrők kiíróra és résztvevőkre
                 if (query.ParticipantsAgeMax != 0)
                 {
                     filtered = filtered.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
@@ -113,7 +133,7 @@ namespace PlannyBackend.Services
                     filtered = filtered.Where(e => e.MinAge >= query.ParticipantsAgeMin);
                 }
 
-                //TODO: Szűrők Helyszínre
+                //Szűrők Helyszínre
                 if (query.Longitude != 0 && query.Latitude != 0 && query.RangeInKms != 0)
                 {
                     Coordinate c = new Coordinate()
@@ -125,7 +145,7 @@ namespace PlannyBackend.Services
                     filtered = filtered.Where(e => IsInRange(e.Location, c, query.RangeInKms));
                 }
 
-                //TODO: szűrők Dátumra
+                //szűrők Dátumra
                 if (query.FromTime != null && query.FromTime > (DateTime.Now.AddYears(-1)))
                 {
                     filtered = filtered.Where(e => e.FromTime >= query.FromTime);
@@ -137,10 +157,12 @@ namespace PlannyBackend.Services
                 }
             }                 
 
-            //TODO order
+            //TODO rendezés és lapozás 
             var ordered = filtered;
 
-            return await ordered.ToListAsync();
+            return await ordered
+                .ProjectTo<PlannyDto>()
+                .ToListAsync();
         }
 
         private bool IsInRange(Location l, Coordinate c, double range)
@@ -165,44 +187,44 @@ namespace PlannyBackend.Services
         public async Task ApproveParticipation(int participationId, int currentUserId)
         {
             var participation = await _context.Participations
-                .Include(e => e.PlannyProposal)
+                .Include(e => e.Planny)
                 .ThenInclude(e => e.Owner)
                 .Where(e => e.Id == participationId)
                 .SingleAsync();
 
-            if (participation.PlannyProposal.OwnerId == currentUserId)
+            if (participation.Planny.OwnerId == currentUserId)
             {
                 participation.State = ParticipationState.Approved;
                 await _context.SaveChangesAsync();
             }
             else
             {
-                //TODO hiba 
+                throw new BusinessLogicException("Participation does not exist") { ErrorCode = ErrorCode.InvalidArgument };
             }
         }
 
         public async Task DeclineParticipation(int participationId, int currentUserId)
         {     
             var participation = await _context.Participations
-                .Include(e => e.PlannyProposal)
+                .Include(e => e.Planny)
                 .ThenInclude(e => e.Owner)
                 .Where(e => e.Id == participationId)
                 .SingleAsync();
 
-            if (participation.PlannyProposal.OwnerId == currentUserId)
+            if (participation.Planny.OwnerId == currentUserId)
             {
                 participation.State = ParticipationState.Required;
                 await _context.SaveChangesAsync();
             }
             else
             {
-                //TODO hiba 
+                throw new BusinessLogicException("Participation does not exist") { ErrorCode = ErrorCode.InvalidArgument };
             }
         }
 
         public async Task CancelParticipation(int proposalId, int currentUserId)
         {           
-            var proposal = await _context.PlannyProposals
+            var proposal = await _context.Plannies
                 .Where(e => e.Id == proposalId)
                 .Include(e => e.Participations)
                 .FirstOrDefaultAsync();
@@ -219,24 +241,23 @@ namespace PlannyBackend.Services
             }
         }
 
-        public async Task DeleteProposa(int id)
+        public async Task Delete(int id)
         {
-            var proposal = await _context.PlannyProposals
+            var proposal = await _context.Plannies
                 .Where(e => e.Id == id)
                 .SingleOrDefaultAsync();
 
-            _context.PlannyProposals.Remove(proposal);
+            _context.Plannies.Remove(proposal);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Participation>> GetParticipationsForUser(int userId)
+        public async Task<List<ParticipationDto>> GetParticipationsForUser(int userId)
         {         
-
-            return await _context.Participations             
-                .Include(e => e.PlannyProposal)
+            return await _context.Participations  
                 .Where(e => e.UserId == userId)
+                .ProjectTo<ParticipationDto>()
                 .ToListAsync();            
-        }
+        }       
     }
 }

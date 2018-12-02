@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using PlannyBackend.Models;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model;
+using PlannyBackend.Model.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,6 +134,9 @@ namespace PlannyBackend.DAL
         private static ApplicationDbContext CreatePlannyProposals(this ApplicationDbContext context)
         {
 
+            var categories = context.Categories.ToList();
+            var r = new Random();
+
             var location1 = new Location()
             {
                 Address = "Budapest",
@@ -148,15 +151,15 @@ namespace PlannyBackend.DAL
                 Longitude = 17.63512
             };
 
-
             for (int i = 0; i < 5; i++)
             {
-                var planny = new PlannyProposal()
+                var planny = new Planny()
                 {
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 17,
+                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                                  .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
@@ -170,17 +173,18 @@ namespace PlannyBackend.DAL
                     Location = location1,
                     PictureUrl = "14548827-e257-4804-9e2a-c681514444af"
                 };
-                context.PlannyProposals.Add(planny);
+                context.Plannies.Add(planny);
             }
 
             for (int i = 5; i < 7; i++)
             {
-                var planny = new PlannyProposal()
+                var planny = new Planny()
                 {
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    CategoryId = 17,
+                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                                  .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
                     IsNearOwner = false,
@@ -194,7 +198,7 @@ namespace PlannyBackend.DAL
                     Location = location2,
                     PictureUrl = "14548827-e257-4804-9e2a-c681514444af"
                 };
-                context.PlannyProposals.Add(planny);
+                context.Plannies.Add(planny);
             }
 
             context.SaveChanges();

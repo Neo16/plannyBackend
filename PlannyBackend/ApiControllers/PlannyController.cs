@@ -9,8 +9,10 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using PlannyBackend.Bll.Interfaces;
-using PlannyBackend.Web.Dtos;
+using PlannyBackend.Bll.Dtos;
 using PlannyBackend.Web.WebServices;
+using AutoMapper;
+using PlannyBackend.Model;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -37,76 +39,55 @@ namespace PlannyBackend.ApiControllers
         }
         
         [HttpPost]      
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Creates a planny proposal owned by the user logged in. Returns created planny proposal.")]
-        public async Task<IActionResult> CreatePlanny([FromBody] CreatePlannyProposalDto planny)
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDto), "Creates a planny owned by the user logged in. Returns created planny.")]
+        public async Task<IActionResult> CreatePlanny([FromBody] CreateEditPlannyDto planny)
         {
-
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            planny.OwnerId = currentUserId;
-           
-            var plannyEnt = planny.ToEntity();         
-            await _plannyService.CreatePlanny(plannyEnt);
+            planny.OwnerId = currentUserId;            
+            await _plannyService.CreatePlanny(planny);
             return Ok(planny);
         }
     
         [AllowAnonymous]
-        [HttpPost("proposals")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDto>),
-            "Returns list of planny proposals by filtered in the query object, or the 30 newest if the query object is null. ")]
-        public async Task<IActionResult> GetPlannies([FromBody] ProposalQueryDto query = null)
+        [HttpPost("search")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyDto>),
+            "Returns list of planny by filtered in the query object, or the 30 newest if the query object is null. ")]
+        public async Task<IActionResult> SearchPlannies([FromBody] PlannyQueryDto query = null)
         {            
-            var plannies = new List<PlannyProposalDto>();  
-                plannies = (await _plannyService.SearchPlannyProposals(query?.ToEntity()))
-                   .Select(e => new PlannyProposalDto(e)).ToList();                    
+            var plannies = new List<PlannyDto>();
+            plannies = (await _plannyService.SearchPlannies(query));                                    
             return Ok(plannies);
         }
       
-        [HttpGet("myproposals")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyProposalDtoWithParticipants>),
-           "Returns list of planny proposals by specified in the query object, or all of them if query object is null. ")]
+        [HttpGet("my")]     
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyDtoWithParticipants>),
+           "Returns list of planny by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-
-            var plannies = new List<PlannyProposalDtoWithParticipants>();
-            plannies = (await _plannyService.GetPlannyProposalsOfUser(currentUserId))
-                  .Select(e => new PlannyProposalDtoWithParticipants(e)).ToList();            
-
+            var plannies = new List<PlannyDtoWithParticipants>();
+            plannies = (await _plannyService.GetPlanniesOfUser(currentUserId));              
             return Ok(plannies);
         }
 
-        [HttpGet("proposals/{id}")]      
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyProposalDto), "Returns a planny proposals of given Id.")]
-        public async Task<IActionResult> GetPlannyProposal(int id)
+        [HttpGet("{id}")]      
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDtoWithParticipants), "Returns a planny of given Id.")]
+        public async Task<IActionResult> GetPlanny(int id)
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var plannyObj = await _plannyService.GetPlannyProposalById(id);
-            var participation = plannyObj.Participations
-                .Where(p => p.UserId == currentUserId)
-                .FirstOrDefault();
-
-            var planny = new PlannyProposalDto(plannyObj);
-            if ( participation == null)
-            {
-                planny.ParticipationState = "none";
-            }
-            else
-            {
-                planny.ParticipationState = participation.State.ToString();
-            }
-
+            var planny = await _plannyService.GetByIdWithParticipants(id);
             return Ok(planny);
         }
 
 
         //todo legyen post 
-        [HttpGet("joinproposal/{id}")]     
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny proposal as a participant. Returns id of proposal.")]
-        public async Task<IActionResult> JoinPlannyProposal(int id)
+        [HttpGet("join/{id}")]     
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully joined planny as a participant. Returns id of planny.")]
+        public async Task<IActionResult> JoinPlanny(int id)
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            //todo check, hogy van-e ilyen proposal és tudok-e rá jelentkezni
-            await _plannyService.JoinProposal(id, currentUserId);
+            //todo check, hogy van-e ilyen és tudok-e rá jelentkezni
+            await _plannyService.Join(id, currentUserId);
             return Ok(id);
         }
 
@@ -138,17 +119,18 @@ namespace PlannyBackend.ApiControllers
             return Ok("decline successful");
         }
 
-        [HttpPut("proposals/{id}")]
-        public async Task<IActionResult> UpdateProposal(int id, [FromBody] CreatePlannyProposalDto planny)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] CreateEditPlannyDto planny)
         {
-            //TODO
+            var currentUserId = await _currentUserService.GetCurrentUserId();
+            await _plannyService.UpdatePlanny(id, planny, currentUserId);
             return Ok();
         }
 
-        [HttpDelete("proposals/{id}")]
-        public async Task<IActionResult> DeleteProposal(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            await _plannyService.DeleteProposa(id);
+            await _plannyService.Delete(id);
             return Ok("delete succesfull");
         }
 
@@ -156,11 +138,9 @@ namespace PlannyBackend.ApiControllers
         public async Task<IActionResult> GetMyParticipations()
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var part = (await _plannyService.GetParticipationsForUser(currentUserId))
-                .Select(e => new MyParticipationDto(e))
-                .ToList();           
+            var participations = await _plannyService.GetParticipationsForUser(currentUserId);                 
 
-            return Ok(part);
+            return Ok(participations);
         }
 
     }

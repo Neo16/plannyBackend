@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace PlannyBackend.Models.Identity
+namespace PlannyBackend.Model.Identity
 {
     public class ApplicationRole : IdentityRole<int>
     {

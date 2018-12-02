@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using PlannyBackend.Bll.BllModels;
-using PlannyBackend.Models.Enums;
+﻿using PlannyBackend.Model.Enums;
 using System;
 using System.Collections.Generic;
 
-namespace PlannyBackend.Web.Dtos
+namespace PlannyBackend.Bll.Dtos
 {
-    public class ProposalQueryDto
+    public class PlannyQueryDto
     {
         //kategoria
         public List<int> CategoryIds { get; set; }
@@ -26,11 +24,7 @@ namespace PlannyBackend.Web.Dtos
 
         public bool OnlySimilarInterestParticipants { get; set; }
 
-        //Szűrők Helyszínre
-        public String SettlementName { get; set; }
-
-        public bool OnlyAtGivenSettlement { get; set; }
-
+        //Szűrők Helyszínre 
         public double Longitude { get; set; }
         public double Latitude { get; set; }
         public double RangeInKms { get; set; }
@@ -41,22 +35,7 @@ namespace PlannyBackend.Web.Dtos
         public DateTime ToTime { get; set; }
 
         //Sorrend
-        public ProposalOrderDto Order { get; set; }
-
-        public ProposalQueryDto(ProposalQuery query)
-        {
-            Mapper.Map(query, this);
-        }
-
-        public ProposalQuery ToEntity()
-        {     
-            var result =  Mapper.Map<ProposalQuery>(this);
-            if (this.Order == null)
-            {
-                result.Order = new ProposalOrder();
-            }
-            return result;
-        }
+        public Order Order { get; set; }
 
     }
 }

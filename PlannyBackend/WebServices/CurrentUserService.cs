@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model.Identity;
 using System.Threading.Tasks;
 
 namespace PlannyBackend.Web.WebServices

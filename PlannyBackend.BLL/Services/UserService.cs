@@ -1,7 +1,7 @@
 ﻿using PlannyBackend.Interfaces;
 using System.Linq;
 using System.Threading.Tasks;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using PlannyBackend.Models.Identity;
+using PlannyBackend.Model.Identity;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using PlannyBackend.Common.Configurations;
-using PlannyBackend.Web.Dtos.Account;
+using PlannyBackend.Bll.Dtos.Account;
 
 namespace PlannyBackend.Web.WebServices
 {
