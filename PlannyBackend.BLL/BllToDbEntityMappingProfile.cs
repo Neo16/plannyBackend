@@ -31,7 +31,7 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.IsNearOwner, f => f.MapFrom(k => k.IsNearOwner))
                 .ForMember(e => e.IsSimilarInterest, f => f.MapFrom(k => k.IsSimilarInterest))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.Categories, f => f.MapFrom(k => k.PlannyCategories))
+                .ForMember(e => e.Categories, f => f.MapFrom(k => k.PlannyCategorys))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));           
 
             CreateMap<CreateEditPlannyDto, Planny>()
@@ -47,7 +47,7 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.IsNearOwner, f => f.MapFrom(k => k.IsNearOwner))
                 .ForMember(e => e.IsSimilarInterest, f => f.MapFrom(k => k.IsSimilarInterest))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.PlannyCategories, f => f.MapFrom(k => k.CategoryIds))
+                .ForMember(e => e.PlannyCategorys, f => f.MapFrom(k => k.CategoryIds))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
 
             CreateMap<int, PlannyCategory>()

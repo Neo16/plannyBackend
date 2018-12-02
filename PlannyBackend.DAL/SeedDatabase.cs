@@ -158,7 +158,7 @@ namespace PlannyBackend.DAL
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                    PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
@@ -183,7 +183,7 @@ namespace PlannyBackend.DAL
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                    PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),

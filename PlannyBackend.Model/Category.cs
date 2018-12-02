@@ -13,6 +13,6 @@ namespace PlannyBackend.Model
         //Todo: nem lehetne referenciával? 
         public int? ParentCategoryId { get; set; }
 
-        public ICollection<PlannyCategory> PlannyCategories { get; set; }
+        public ICollection<PlannyCategory> PlannyCategorys { get; set; }
     }
 }

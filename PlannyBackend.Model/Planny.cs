@@ -24,7 +24,7 @@ namespace PlannyBackend.Model
 
         public List<Participation> Participations { get; set; }
 
-        public ICollection<PlannyCategory> PlannyCategories { get; set; }    
+        public ICollection<PlannyCategory> PlannyCategorys { get; set; }    
 
         public string PictureUrl { get; set; }
 

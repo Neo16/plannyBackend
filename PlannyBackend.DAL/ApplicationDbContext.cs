@@ -11,7 +11,7 @@ namespace PlannyBackend.DAL
     {
         public virtual DbSet<Participation> Participations { get; set; }
         public virtual DbSet<Planny> Plannies { get; set; }
-        public virtual DbSet<PlannyCategory> PlannyCategories { get; set; }
+        public virtual DbSet<PlannyCategory> PlannyCategorys { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

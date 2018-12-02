@@ -50,17 +50,17 @@ namespace PlannyBackend.Services
             Planny newplannyEnt = Mapper.Map<Planny>(planny);
 
             newplannyEnt.Id = oldPlannyEnt.Id;
-            foreach (var plannyCategory in newplannyEnt.PlannyCategories)
+            foreach (var plannyCategory in newplannyEnt.PlannyCategorys)
             {
                 plannyCategory.Category = null;
                 plannyCategory.PlannyId = newplannyEnt.Id;
             }
-            if (oldPlannyEnt.PlannyCategories != null && oldPlannyEnt.PlannyCategories.Count() > 0)
+            if (oldPlannyEnt.PlannyCategorys != null && oldPlannyEnt.PlannyCategorys.Count() > 0)
             {
-                _context.PlannyCategories.RemoveRange(oldPlannyEnt.PlannyCategories);
+                _context.PlannyCategorys.RemoveRange(oldPlannyEnt.PlannyCategorys);
             }
 
-            _context.PlannyCategories.AddRange(newplannyEnt.PlannyCategories);
+            _context.PlannyCategorys.AddRange(newplannyEnt.PlannyCategorys);
             _context.Entry(oldPlannyEnt).CurrentValues.SetValues(newplannyEnt);
             await _context.SaveChangesAsync();
         }
@@ -68,7 +68,7 @@ namespace PlannyBackend.Services
         public async Task<List<PlannyDtoWithParticipants>> GetPlanniesOfUser(int userId)
         {
             return await _context.Plannies
-               .Include(e => e.PlannyCategories)
+               .Include(e => e.PlannyCategorys)
                .ThenInclude(e => e.Category)
                .Where(e => e.Owner.Id == userId)
                .ProjectTo<PlannyDtoWithParticipants>()
@@ -78,7 +78,7 @@ namespace PlannyBackend.Services
         public async Task<PlannyDtoWithParticipants> GetByIdWithParticipants(int Id)
         {
             return await _context.Plannies
-               .Include(e => e.PlannyCategories)
+               .Include(e => e.PlannyCategorys)
                .ThenInclude(e => e.Category)
                .Where(e => e.Id == Id)
                .ProjectTo<PlannyDtoWithParticipants>()
@@ -106,7 +106,7 @@ namespace PlannyBackend.Services
         public async Task<List<PlannyDto>> SearchPlannies(PlannyQueryDto query)
         {
             var plannies = _context.Plannies
-                .Include(e => e.PlannyCategories)
+                .Include(e => e.PlannyCategorys)
                 .ThenInclude(e => e.Category)
                 .AsQueryable();
 
@@ -116,7 +116,7 @@ namespace PlannyBackend.Services
                 if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
                     var filteredCategoryIds = query.CategoryIds;
-                    plannies = plannies.Where(e => e.PlannyCategories.Any(c => filteredCategoryIds.Contains(c.CategoryId)));
+                    plannies = plannies.Where(e => e.PlannyCategorys.Any(c => filteredCategoryIds.Contains(c.CategoryId)));
                 }
 
                 //szűrők kiíróra és résztvevőkre
