@@ -22,6 +22,7 @@ using PlannyBackend.Common.Configurations;
 using PlannyBackend.DAL;
 using PlannyBackend.Web.WebServices;
 using PlannyBackend.Web.Middlewares;
+using PlannyBackend.BLL;
 
 namespace PlannyBackend.Web
 {
@@ -131,13 +132,14 @@ namespace PlannyBackend.Web
             app.UseStaticFiles();
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseAuthentication();
-            app.UseSwagger();
-
+            app.UseSwagger();            
 
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Planny API");
             });
+
+            AutoMapperConfiguration.Configure();
 
             app.UseMvc(routes =>
             {
@@ -145,14 +147,8 @@ namespace PlannyBackend.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
-
-            Mapper.Initialize(cfg =>
-            {
-                cfg.AddProfiles(GetType().GetTypeInfo().Assembly);
-            });
-
+            
             context.Seed();
-
         }
     }
 }

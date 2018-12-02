@@ -9,7 +9,7 @@ namespace PlannyBackend.DAL.Configure
         public void Configure(EntityTypeBuilder<PlannyCategory> builder)
         {
             builder
-              .HasKey(a => new { a.CategoryId, a.PlannyId });
+              .HasKey(a => new { a.PlannyId, a.CategoryId });
         }
     }
 }

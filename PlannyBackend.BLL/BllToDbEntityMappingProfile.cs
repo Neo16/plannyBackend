@@ -4,6 +4,7 @@ using PlannyBackend.Bll.Dtos;
 using PlannyBackend.Bll.Dtos.Account;
 using PlannyBackend.Model;
 using PlannyBackend.Model.Identity;
+using System.Linq;
 
 namespace PlannyBackend.BLL
 {
@@ -31,7 +32,7 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.IsNearOwner, f => f.MapFrom(k => k.IsNearOwner))
                 .ForMember(e => e.IsSimilarInterest, f => f.MapFrom(k => k.IsSimilarInterest))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.CategoryNames, f => f.MapFrom(k => k.PlannyCategories))
+                .ForMember(e => e.CategoryNames, f => f.MapFrom(k => k.PlannyCategories.Select(e => e.Category.Name)))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
 
             CreateMap<CreateEditPlannyDto, Planny>()
@@ -49,9 +50,6 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
                 .ForMember(e => e.PlannyCategories, f => f.MapFrom(k => k.CategoryIds))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
-
-            CreateMap<PlannyCategory, string>()
-                .ForMember(e => e, f => f.MapFrom(k => k.Category.Name));
 
             CreateMap<int, PlannyCategory>()
                 .ForMember(e => e.CategoryId, f => f.MapFrom(k => k));

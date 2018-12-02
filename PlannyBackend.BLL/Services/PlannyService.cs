@@ -100,15 +100,13 @@ namespace PlannyBackend.Services
         }
 
         public async Task<List<PlannyDto>> SearchPlannies(PlannyQueryDto query)
-        {
-            var plannies = _context.Plannies                 
-                 .AsQueryable();
-
-            var filtered = plannies;
+        {        
+            var plannies = _context.Plannies               
+                .AsQueryable();
 
             if (query == null)
             {
-                filtered = filtered
+                plannies = plannies
                    //Todo legyen hozzáadás dátuma a plannyn 
                    .OrderBy(e => e.FromTime)
                    .Take(30);
@@ -119,18 +117,18 @@ namespace PlannyBackend.Services
                 if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
                     var filteredCategoryIds = query.CategoryIds;
-                    filtered = filtered.Where(e => e.PlannyCategories.Any( c => filteredCategoryIds.Contains(c.CategoryId)));
+                    plannies = plannies.Where(e => e.PlannyCategories.Any( c => filteredCategoryIds.Contains(c.CategoryId)));
                 }
 
                 //szűrők kiíróra és résztvevőkre
                 if (query.ParticipantsAgeMax != 0)
                 {
-                    filtered = filtered.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
+                    plannies = plannies.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
                 }
 
                 if (query.ParticipantsAgeMin != 0)
                 {
-                    filtered = filtered.Where(e => e.MinAge >= query.ParticipantsAgeMin);
+                    plannies = plannies.Where(e => e.MinAge >= query.ParticipantsAgeMin);
                 }
 
                 //Szűrők Helyszínre
@@ -142,25 +140,24 @@ namespace PlannyBackend.Services
                         Longitude = query.Longitude
                     };
 
-                    filtered = filtered.Where(e => IsInRange(e.Location, c, query.RangeInKms));
+                    plannies = plannies.Where(e => IsInRange(e.Location, c, query.RangeInKms));
                 }
 
                 //szűrők Dátumra
                 if (query.FromTime != null && query.FromTime > (DateTime.Now.AddYears(-1)))
                 {
-                    filtered = filtered.Where(e => e.FromTime >= query.FromTime);
+                    plannies = plannies.Where(e => e.FromTime >= query.FromTime);
                 }
 
                 if (query.ToTime != null && query.ToTime > DateTime.Now)
                 {
-                    filtered = filtered.Where(e => e.ToTime <= query.ToTime);
+                    plannies = plannies.Where(e => e.ToTime <= query.ToTime);
                 }
             }                 
+             
+            //TODO rendezés és lapozás          
 
-            //TODO rendezés és lapozás 
-            var ordered = filtered;
-
-            return await ordered
+            return await plannies
                 .ProjectTo<PlannyDto>()
                 .ToListAsync();
         }
