@@ -171,7 +171,7 @@ namespace PlannyBackend.DAL
                     MinParticipants = 1,
                     Participations = new List<Participation>(),
                     Location = location1,
-                    PictureUrl = "14548827-e257-4804-9e2a-c681514444af"
+                    PictureUrl = "http://placehold.it/800x600"
                 };
                 context.Plannies.Add(planny);
             }
@@ -196,7 +196,7 @@ namespace PlannyBackend.DAL
                     MinParticipants = 1,
                     Participations = new List<Participation>(),
                     Location = location2,
-                    PictureUrl = "14548827-e257-4804-9e2a-c681514444af"
+                    PictureUrl = "http://placehold.it/800x600"
                 };
                 context.Plannies.Add(planny);
             }

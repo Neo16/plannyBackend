@@ -59,7 +59,7 @@ namespace PlannyBackend.ApiControllers
             return Ok(plannies);
         }
       
-        [HttpGet("my")]     
+        [HttpGet("myplannies")]     
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyDtoWithParticipants>),
            "Returns list of planny by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()

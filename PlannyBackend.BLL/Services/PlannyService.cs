@@ -78,6 +78,8 @@ namespace PlannyBackend.Services
         public async Task<PlannyDtoWithParticipants> GetByIdWithParticipants(int Id)
         {
             return await _context.Plannies
+               .Include(e => e.PlannyCategories)
+               .ThenInclude(e => e.Category)
                .Where(e => e.Id == Id)
                .ProjectTo<PlannyDtoWithParticipants>()
                .FirstOrDefaultAsync();
