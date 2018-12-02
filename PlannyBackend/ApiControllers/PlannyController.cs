@@ -8,8 +8,8 @@ using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using PlannyBackend.Bll.Interfaces;
-using PlannyBackend.Bll.Dtos;
+using PlannyBackend.BLL.Interfaces;
+using PlannyBackend.BLL.Dtos;
 using PlannyBackend.Web.WebServices;
 using AutoMapper;
 using PlannyBackend.Model;
@@ -55,7 +55,7 @@ namespace PlannyBackend.ApiControllers
         public async Task<IActionResult> SearchPlannies([FromBody] PlannyQueryDto query = null)
         {            
             var plannies = new List<PlannyDto>();
-            plannies = (await _plannyService.SearchPlannies(query));                                    
+            plannies = await _plannyService.SearchPlannies(query);                                    
             return Ok(plannies);
         }
       

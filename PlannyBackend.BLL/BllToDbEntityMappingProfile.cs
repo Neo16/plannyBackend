@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
-using PlannyBackend.Bll.Dtos;
-using PlannyBackend.Bll.Dtos.Account;
+using PlannyBackend.BLL.Dtos;
 using PlannyBackend.Model;
 using PlannyBackend.Model.Identity;
 using System.Linq;
@@ -32,8 +31,8 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.IsNearOwner, f => f.MapFrom(k => k.IsNearOwner))
                 .ForMember(e => e.IsSimilarInterest, f => f.MapFrom(k => k.IsSimilarInterest))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.CategoryNames, f => f.MapFrom(k => k.PlannyCategories.Select(e => e.Category.Name)))
-                .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
+                .ForMember(e => e.Categories, f => f.MapFrom(k => k.PlannyCategories))
+                .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));           
 
             CreateMap<CreateEditPlannyDto, Planny>()
                 .ForMember(e => e.Name, f => f.MapFrom(k => k.Name))
@@ -54,6 +53,8 @@ namespace PlannyBackend.BLL
             CreateMap<int, PlannyCategory>()
                 .ForMember(e => e.CategoryId, f => f.MapFrom(k => k));
 
+            CreateMap<PlannyCategory, CategoryDto>()              
+              .ForMember(e => e.Name, f => f.MapFrom(k => k.Category.Name));
 
             CreateMap<Planny, PlannyDtoWithParticipants>()
                 .IncludeBase<Planny, PlannyDto>()

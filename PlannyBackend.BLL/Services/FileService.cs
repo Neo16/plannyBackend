@@ -1,4 +1,4 @@
-﻿using PlannyBackend.Bll.Interfaces;
+﻿using PlannyBackend.BLL.Interfaces;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 
-namespace PlannyBackend.Bll.Services
+namespace PlannyBackend.BLL.Services
 {
     public class FileService : IFileService
     {

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Geolocation;
 using PlannyBackend.DAL;
-using PlannyBackend.Bll.Dtos;
+using PlannyBackend.BLL.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using PlannyBackend.BLL.Exceptions;
@@ -62,12 +62,14 @@ namespace PlannyBackend.Services
 
             _context.PlannyCategories.AddRange(newplannyEnt.PlannyCategories);
             _context.Entry(oldPlannyEnt).CurrentValues.SetValues(newplannyEnt);
-            await _context.SaveChangesAsync();      
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<PlannyDtoWithParticipants>> GetPlanniesOfUser(int userId)
         {
             return await _context.Plannies
+               .Include(e => e.PlannyCategories)
+               .ThenInclude(e => e.Category)
                .Where(e => e.Owner.Id == userId)
                .ProjectTo<PlannyDtoWithParticipants>()
                .ToListAsync();
@@ -80,10 +82,10 @@ namespace PlannyBackend.Services
                .ProjectTo<PlannyDtoWithParticipants>()
                .FirstOrDefaultAsync();
         }
-    
+
 
         public async Task Join(int id, int currentUserId)
-        {          
+        {
             var proposal = await _context.Plannies
                 .Where(e => e.Id == id)
                 .Include(e => e.Participations)
@@ -100,24 +102,19 @@ namespace PlannyBackend.Services
         }
 
         public async Task<List<PlannyDto>> SearchPlannies(PlannyQueryDto query)
-        {        
-            var plannies = _context.Plannies               
+        {
+            var plannies = _context.Plannies
+                .Include(e => e.PlannyCategories)
+                .ThenInclude(e => e.Category)
                 .AsQueryable();
 
-            if (query == null)
-            {
-                plannies = plannies
-                   //Todo legyen hozzáadás dátuma a plannyn 
-                   .OrderBy(e => e.FromTime)
-                   .Take(30);
-            }
-            else
+            if (query != null)
             {
                 //kategoriára 
                 if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
                     var filteredCategoryIds = query.CategoryIds;
-                    plannies = plannies.Where(e => e.PlannyCategories.Any( c => filteredCategoryIds.Contains(c.CategoryId)));
+                    plannies = plannies.Where(e => e.PlannyCategories.Any(c => filteredCategoryIds.Contains(c.CategoryId)));
                 }
 
                 //szűrők kiíróra és résztvevőkre
@@ -153,8 +150,8 @@ namespace PlannyBackend.Services
                 {
                     plannies = plannies.Where(e => e.ToTime <= query.ToTime);
                 }
-            }                 
-             
+            }
+
             //TODO rendezés és lapozás          
 
             return await plannies
@@ -201,7 +198,7 @@ namespace PlannyBackend.Services
         }
 
         public async Task DeclineParticipation(int participationId, int currentUserId)
-        {     
+        {
             var participation = await _context.Participations
                 .Include(e => e.Planny)
                 .ThenInclude(e => e.Owner)
@@ -220,7 +217,7 @@ namespace PlannyBackend.Services
         }
 
         public async Task CancelParticipation(int proposalId, int currentUserId)
-        {           
+        {
             var proposal = await _context.Plannies
                 .Where(e => e.Id == proposalId)
                 .Include(e => e.Participations)
@@ -250,11 +247,11 @@ namespace PlannyBackend.Services
         }
 
         public async Task<List<ParticipationDto>> GetParticipationsForUser(int userId)
-        {         
-            return await _context.Participations  
+        {
+            return await _context.Participations
                 .Where(e => e.UserId == userId)
                 .ProjectTo<ParticipationDto>()
-                .ToListAsync();            
-        }       
+                .ToListAsync();
+        }
     }
 }

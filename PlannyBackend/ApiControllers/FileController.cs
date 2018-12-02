@@ -5,7 +5,7 @@ using System.Net;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using PlannyBackend.Bll.Interfaces;
+using PlannyBackend.BLL.Interfaces;
 
 namespace PlannyBackend.Web.ApiControllers
 {

@@ -1,5 +1,5 @@
 ﻿
-using PlannyBackend.Bll.Dtos;
+using PlannyBackend.BLL.Dtos;
 using PlannyBackend.Model;
 using System;
 using System.Collections.Generic;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PlannyBackend.Bll.Dtos.Account
+namespace PlannyBackend.BLL.Dtos.Account
 {
     public class LoginResultDto
     {

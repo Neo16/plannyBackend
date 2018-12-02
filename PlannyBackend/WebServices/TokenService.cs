@@ -8,7 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using PlannyBackend.Common.Configurations;
-using PlannyBackend.Bll.Dtos.Account;
+using PlannyBackend.BLL.Dtos.Account;
 
 namespace PlannyBackend.Web.WebServices
 {

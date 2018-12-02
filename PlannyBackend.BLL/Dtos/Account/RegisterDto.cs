@@ -1,6 +1,6 @@
 ﻿using PlannyBackend.Model.Identity;
 
-namespace PlannyBackend.Bll.Dtos.Account
+namespace PlannyBackend.BLL.Dtos
 {
     public class RegisterDto
     {

@@ -6,8 +6,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Net;
 using PlannyBackend.Interfaces;
 using PlannyBackend.Web.WebServices;
-using PlannyBackend.Bll.Dtos.Account;
+using PlannyBackend.BLL.Dtos.Account;
 using AutoMapper;
+using PlannyBackend.BLL.Dtos;
 
 namespace PlannyBackend.Web.ApiControllers
 {

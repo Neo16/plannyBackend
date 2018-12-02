@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlannyBackend.Bll.Dtos
+namespace PlannyBackend.BLL.Dtos
 {
     public class PlannyDto
     {
@@ -15,7 +15,7 @@ namespace PlannyBackend.Bll.Dtos
 
         public LocationDto Location { get; set; }
 
-        public List<string> CategoryNames { get; set; }
+        public List<CategoryDto> Categories { get; set; }
 
         public int MinParticipants { get; set; }
         public int MaxParticipants { get; set; }

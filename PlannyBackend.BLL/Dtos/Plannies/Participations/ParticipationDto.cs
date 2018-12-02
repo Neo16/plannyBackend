@@ -1,5 +1,5 @@
 ﻿
-namespace PlannyBackend.Bll.Dtos
+namespace PlannyBackend.BLL.Dtos
 {
     public class ParticipationDto
     {
