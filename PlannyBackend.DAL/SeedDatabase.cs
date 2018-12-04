@@ -13,7 +13,6 @@ namespace PlannyBackend.DAL
     public static class SeedDatabase
     {
         private static IHostingEnvironment env { get; set; }
-        public static DateTime New { get; private set; }
 
         public static void Seed(this ApplicationDbContext context)
         {
@@ -41,10 +40,7 @@ namespace PlannyBackend.DAL
                 EmailConfirmed = true,
                 SecurityStamp = "345435kl5m3k45m34k",
                 PhoneNumber = "+311124211",
-                BirthDate = new DateTime(1996, 04, 12),
-                Gender = Gender.Male,
-                SelfIntroduction = "",
-                PictureUrl = webrootUrl + "/user-placeholder.jpg",
+
             };
             user.PasswordHash = passwordHasher.HashPassword(user, "Asdf123!");
 
