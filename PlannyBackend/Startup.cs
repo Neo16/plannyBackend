@@ -82,6 +82,7 @@ namespace PlannyBackend.Web
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton(hostingEnvironment);
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IProfileService, ProfileService>();
             services.AddCors();
             services.AddMvc();
 

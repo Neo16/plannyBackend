@@ -17,7 +17,7 @@ namespace PlannyBackend.DAL.Configure
             builder
               .HasOne(p => p.Planny)
               .WithMany(planny => planny.Participations)
-              .HasForeignKey(p => p.PlannyProposalId)
+              .HasForeignKey(p => p.PlannyId)
               .OnDelete(DeleteBehavior.Cascade);
         }
     }

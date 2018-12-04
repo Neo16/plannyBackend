@@ -29,6 +29,6 @@ namespace PlannyBackend.Interfaces
 
         Task Delete(int id);
 
-        Task<List<ParticipationDto>> GetParticipationsOfUser(int userId);
+        Task<List<MyParticipationDto>> GetParticipationsOfUser(int userId);
     }
 }

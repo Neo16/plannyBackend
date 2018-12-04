@@ -13,7 +13,7 @@ namespace PlannyBackend.Model
         public ApplicationUser User { get; set; }
         public int? UserId { get; set; }
         public ParticipationState State { get; set; }
-        public int PlannyProposalId { get; set; }
+        public int PlannyId { get; set; }
         public Planny Planny { get; set; }
     }
 }

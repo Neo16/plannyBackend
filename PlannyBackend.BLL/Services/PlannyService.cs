@@ -178,8 +178,6 @@ namespace PlannyBackend.Services
             return true;
         }
 
-
-
         public async Task ApproveParticipation(int participationId, int currentUserId)
         {
             var participation = await _context.Participations
@@ -248,11 +246,12 @@ namespace PlannyBackend.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<ParticipationDto>> GetParticipationsOfUser(int userId)
+        public async Task<List<MyParticipationDto>> GetParticipationsOfUser(int userId)
         {
             return await _context.Participations
+                .Include(e => e.Planny)
                 .Where(e => e.UserId == userId)
-                .ProjectTo<ParticipationDto>()
+                .ProjectTo<MyParticipationDto>()
                 .ToListAsync();
         }
     }
