@@ -4,6 +4,7 @@ using PlannyBackend.BLL.Dtos;
 using PlannyBackend.BLL.Dtos.Profile;
 using PlannyBackend.Model;
 using PlannyBackend.Model.Identity;
+using System;
 using System.Linq;
 
 namespace PlannyBackend.BLL
@@ -81,7 +82,7 @@ namespace PlannyBackend.BLL
 
             CreateMap<ApplicationUser, ProfileDto>()
                .ForMember(e => e.UserName, f => f.MapFrom(k => k.UserName))
-               .ForMember(e => e.Age, f => f.MapFrom(k => k.Age))
+               .ForMember(e => e.Age, f => f.MapFrom(k => DateTime.Now.Year - k.BirthDate.Year))
                .ForMember(e => e.Gender, f => f.MapFrom(k => k.Gender))
                .ForMember(e => e.SelfIntroduction, f => f.MapFrom(k => k.SelfIntroduction))
                .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl));

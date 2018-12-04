@@ -39,7 +39,7 @@ namespace PlannyBackend.Web.ApiControllers
             return Ok(profile);
         }
 
-        [HttpGet("{own}")]
+        [HttpGet("own")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(ProfileDto), "Returns own profile data")]
         public async Task<IActionResult> GetMyProfile()
         {
@@ -48,7 +48,7 @@ namespace PlannyBackend.Web.ApiControllers
             return Ok(profile);
         }
 
-        [HttpPost("{own/edit}")]
+        [HttpPost("own/edit")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Edit was successful.")]
         public async Task<IActionResult> UpdateProfile(ProfileDto profile)
         {

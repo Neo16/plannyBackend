@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using PlannyBackend.Model;
+using PlannyBackend.Model.Enums;
 using PlannyBackend.Model.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,19 +12,22 @@ namespace PlannyBackend.DAL
 {
     public static class SeedDatabase
     {
+        private static IHostingEnvironment env { get; set; }
+
         public static void Seed(this ApplicationDbContext context)
         {
+            var placeholderPicturesUrl = "https://localhost:44378/placeholderPictures";
             context.Database.EnsureCreated();
             if (!context.Users.Any())
             {
                 context
-                    .CreateUsers()
+                    .CreateUsers(placeholderPicturesUrl)
                     .CreateCategories()
-                    .CreatePlannyProposals();
+                    .CreatePlannies(placeholderPicturesUrl);
             }
         }
 
-        private static ApplicationDbContext CreateUsers(this ApplicationDbContext context)
+        private static ApplicationDbContext CreateUsers(this ApplicationDbContext context, string webrootUrl)
         {
             PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
 
@@ -35,7 +40,10 @@ namespace PlannyBackend.DAL
                 EmailConfirmed = true,
                 SecurityStamp = "345435kl5m3k45m34k",
                 PhoneNumber = "+311124211",
-
+                Age = 20,
+                Gender = Gender.Male,
+                SelfIntroduction = "",
+                PictureUrl = webrootUrl + "/user-placeholder.jpg",
             };
             user.PasswordHash = passwordHasher.HashPassword(user, "Asdf123!");
 
@@ -75,7 +83,7 @@ namespace PlannyBackend.DAL
             {
                 Name = "party",
             };
-            context.Categories.Add(category5);            
+            context.Categories.Add(category5);
 
             var category6 = new Category()
             {
@@ -93,9 +101,9 @@ namespace PlannyBackend.DAL
             {
                 Name = "food",
             };
-            context.Categories.Add(category8);    
+            context.Categories.Add(category8);
 
-            for(int i = 1; i <= 8; i++)
+            for (int i = 1; i <= 8; i++)
             {
                 var cat = new Category()
                 {
@@ -131,7 +139,7 @@ namespace PlannyBackend.DAL
             return context;
         }
 
-        private static ApplicationDbContext CreatePlannyProposals(this ApplicationDbContext context)
+        private static ApplicationDbContext CreatePlannies(this ApplicationDbContext context, string webrootUrl)
         {
 
             var categories = context.Categories.ToList();
@@ -162,16 +170,12 @@ namespace PlannyBackend.DAL
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
-                    IsNearOwner = false,
-                    IsOnlyForFriends = false,
-                    IsSimilarInterest = false,
                     MaxRequeredAge = 99,
                     MinRequeredAge = 18,
                     MaxParticipants = 10,
-                    MinParticipants = 1,
                     Participations = new List<Participation>(),
                     Location = location1,
-                    PictureUrl = "http://placehold.it/800x600"
+                    PictureUrl = webrootUrl + "/planny-placeholder-" + ((i % 5) + 1) + ".jpg",
                 };
                 context.Plannies.Add(planny);
             }
@@ -187,16 +191,12 @@ namespace PlannyBackend.DAL
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(7),
                     ToTime = DateTime.Now.AddDays(8),
-                    IsNearOwner = false,
-                    IsOnlyForFriends = false,
-                    IsSimilarInterest = false,
                     MaxRequeredAge = 99,
                     MinRequeredAge = 18,
                     MaxParticipants = 10,
-                    MinParticipants = 1,
                     Participations = new List<Participation>(),
                     Location = location2,
-                    PictureUrl = "http://placehold.it/800x600"
+                    PictureUrl = webrootUrl + "/planny-placeholder-" + ((i % 5) + 1) + ".jpg",
                 };
                 context.Plannies.Add(planny);
             }
