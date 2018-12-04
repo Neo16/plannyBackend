@@ -10,6 +10,6 @@ namespace PlannyBackend.BLL.Interfaces
     {
         Task<ProfileDto> Get(int id);
 
-        Task Edit(int id, ProfileDto profile);
+        Task Edit(int id, EditProfileDto profile);
     }
 }

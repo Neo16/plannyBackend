@@ -1,4 +1,5 @@
-﻿using AutoMapper.QueryableExtensions;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using PlannyBackend.BLL.Dtos.Profile;
 using PlannyBackend.BLL.Exceptions;
@@ -21,13 +22,15 @@ namespace PlannyBackend.BLL.Services
         
         public async Task<ProfileDto> Get(int id)
         {
-            return await _context.Users
-                 .Where(e => e.Id == id)                 
-                 .ProjectTo<ProfileDto>()
+            var profileEnt = await _context.Users
+                 .Where(e => e.Id == id)     
                  .SingleOrDefaultAsync();
+
+            return Mapper.Map<ProfileDto>(profileEnt);
+
         }
 
-        public async Task Edit(int id, ProfileDto profile)
+        public async Task Edit(int id, EditProfileDto profile)
         {
             var user = await _context.Users
                .FirstOrDefaultAsync(e => e.Id == id);
@@ -35,7 +38,7 @@ namespace PlannyBackend.BLL.Services
             if (user != null)
             {
                 user.UserName = profile.UserName;
-                user.Age = profile.Age;
+                user.BirthDate = profile.BirthDate;
                 user.Gender = profile.Gender;
                 user.SelfIntroduction = profile.SelfIntroduction;
                 user.PictureUrl = profile.PictureUrl;

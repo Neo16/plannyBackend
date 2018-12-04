@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\placeholderPictures\" />
     <Folder Include="wwwroot\pictures\" />
   </ItemGroup>
 

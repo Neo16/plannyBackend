@@ -1,4 +1,5 @@
 ﻿using PlannyBackend.Model.Identity;
+using System;
 
 namespace PlannyBackend.BLL.Dtos
 {
@@ -10,6 +11,6 @@ namespace PlannyBackend.BLL.Dtos
 
         public string Password { get; set; }
 
-        public int Age { get; set; }
+        public DateTime BirthDate { get; set; }
     }
 }
