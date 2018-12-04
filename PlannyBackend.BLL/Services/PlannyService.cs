@@ -65,23 +65,23 @@ namespace PlannyBackend.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<PlannyDtoWithParticipants>> GetPlanniesOfUser(int userId)
+        public async Task<List<PlannyDtoWithParticipations>> GetPlanniesOfUser(int userId)
         {
             return await _context.Plannies
                .Include(e => e.PlannyCategorys)
                .ThenInclude(e => e.Category)
                .Where(e => e.Owner.Id == userId)
-               .ProjectTo<PlannyDtoWithParticipants>()
+               .ProjectTo<PlannyDtoWithParticipations>()
                .ToListAsync();
         }
 
-        public async Task<PlannyDtoWithParticipants> GetByIdWithParticipants(int Id)
+        public async Task<PlannyDtoWithParticipations> GetByIdWithParticipants(int Id)
         {
             return await _context.Plannies
                .Include(e => e.PlannyCategorys)
                .ThenInclude(e => e.Category)
                .Where(e => e.Id == Id)
-               .ProjectTo<PlannyDtoWithParticipants>()
+               .ProjectTo<PlannyDtoWithParticipations>()
                .FirstOrDefaultAsync();
         }
 
@@ -122,12 +122,12 @@ namespace PlannyBackend.Services
                 //szűrők kiíróra és résztvevőkre
                 if (query.ParticipantsAgeMax != 0)
                 {
-                    plannies = plannies.Where(e => e.MaxAge <= query.ParticipantsAgeMax);
+                    plannies = plannies.Where(e => e.MaxRequeredAge <= query.ParticipantsAgeMax);
                 }
 
                 if (query.ParticipantsAgeMin != 0)
                 {
-                    plannies = plannies.Where(e => e.MinAge >= query.ParticipantsAgeMin);
+                    plannies = plannies.Where(e => e.MinRequeredAge >= query.ParticipantsAgeMin);
                 }
 
                 //Szűrők Helyszínre
@@ -248,7 +248,7 @@ namespace PlannyBackend.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<ParticipationDto>> GetParticipationsForUser(int userId)
+        public async Task<List<ParticipationDto>> GetParticipationsOfUser(int userId)
         {
             return await _context.Participations
                 .Where(e => e.UserId == userId)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using PlannyBackend.Model.Enums;
 
 namespace PlannyBackend.Model.Identity
 {
@@ -11,6 +12,13 @@ namespace PlannyBackend.Model.Identity
     {
         public int Age { get; set; }
 
-        public List<Participation> Participations { get; set; }
+        public Gender Gender { get; set; }
+
+        public string SelfIntroduction { get; set; }
+
+        public string PictureUrl { get; set; }
+
+        public List<Participation> Participations { get; set; }          
+        
     }
 }

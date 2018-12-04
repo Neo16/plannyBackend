@@ -60,18 +60,18 @@ namespace PlannyBackend.ApiControllers
         }
       
         [HttpGet("myplannies")]     
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyDtoWithParticipants>),
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(List<PlannyDtoWithParticipations>),
            "Returns list of planny by specified in the query object, or all of them if query object is null. ")]
         public async Task<IActionResult> GetMyPlannies()
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var plannies = new List<PlannyDtoWithParticipants>();
+            var plannies = new List<PlannyDtoWithParticipations>();
             plannies = (await _plannyService.GetPlanniesOfUser(currentUserId));              
             return Ok(plannies);
         }
 
         [HttpGet("{id}")]      
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDtoWithParticipants), "Returns a planny of given Id.")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDtoWithParticipations), "Returns a planny of given Id.")]
         public async Task<IActionResult> GetPlanny(int id)
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
@@ -138,7 +138,7 @@ namespace PlannyBackend.ApiControllers
         public async Task<IActionResult> GetMyParticipations()
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var participations = await _plannyService.GetParticipationsForUser(currentUserId);                 
+            var participations = await _plannyService.GetParticipationsOfUser(currentUserId);                 
 
             return Ok(participations);
         }

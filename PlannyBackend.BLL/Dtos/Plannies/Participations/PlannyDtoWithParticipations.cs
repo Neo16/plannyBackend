@@ -2,7 +2,7 @@
 
 namespace PlannyBackend.BLL.Dtos
 {
-    public class PlannyDtoWithParticipants : PlannyDto
+    public class PlannyDtoWithParticipations : PlannyDto
     {
         public List<ParticipationDto> Participations { get; set; }      
     }

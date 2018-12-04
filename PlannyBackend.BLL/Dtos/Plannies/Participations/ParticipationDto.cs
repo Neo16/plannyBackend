@@ -7,6 +7,5 @@ namespace PlannyBackend.BLL.Dtos
         public int UserId { get; set; }
         public int ParticipationId { get; set; }
         public string State { get; set; }
-        public string PlannyName { get; set; }
     }
 }

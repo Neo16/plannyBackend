@@ -13,9 +13,9 @@ namespace PlannyBackend.Interfaces
 
         Task UpdatePlanny(int id, CreateEditPlannyDto planny, int userId);
 
-        Task<PlannyDtoWithParticipants> GetByIdWithParticipants(int Id);      
+        Task<PlannyDtoWithParticipations> GetByIdWithParticipants(int Id);      
 
-        Task<List<PlannyDtoWithParticipants>> GetPlanniesOfUser(int userId);
+        Task<List<PlannyDtoWithParticipations>> GetPlanniesOfUser(int userId);
 
         Task Join(int proposalId, int userId);
 
@@ -29,6 +29,6 @@ namespace PlannyBackend.Interfaces
 
         Task Delete(int id);
 
-        Task<List<ParticipationDto>> GetParticipationsForUser(int userId);
+        Task<List<ParticipationDto>> GetParticipationsOfUser(int userId);
     }
 }

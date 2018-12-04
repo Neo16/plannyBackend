@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlannyBackend.Model.Enums;
+using System;
 using System.Collections.Generic;
 
 namespace PlannyBackend.BLL.Dtos
@@ -17,14 +18,16 @@ namespace PlannyBackend.BLL.Dtos
 
         public List<CategoryDto> Categories { get; set; }
 
-        public int MinParticipants { get; set; }
-        public int MaxParticipants { get; set; }
-        public int MinAge { get; set; }
-        public int MaxAge { get; set; }
-        public bool IsOnlyForFriends { get; set; }
-        public bool IsNearOwner { get; set; }
-        public bool IsSimilarInterest { get; set; }
-        public string PictureUrl { get; set; }
-        public string ParticipationState  { get; set; }
+        public string OwnerName { get; set; }
+
+        public int OwnerId { get; set; }
+    
+        public string PictureUrl { get; set; }        
+
+
+        public int? MaxParticipants { get; set; }
+        public int? MinRequeredAge { get; set; }
+        public int? MaxRequeredAge { get; set; }
+        public Gender? RequiredGenger { get; set; }
     }   
 }

@@ -1,4 +1,5 @@
-﻿using PlannyBackend.Model.Identity;
+﻿using PlannyBackend.Model.Enums;
+using PlannyBackend.Model.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,14 +30,11 @@ namespace PlannyBackend.Model
         public string PictureUrl { get; set; }
 
         #region participation conditions
-
-        public int MinParticipants { get; set; }
-        public int MaxParticipants { get; set; }
-        public int MinAge { get; set; }
-        public int MaxAge { get; set; }
-        public bool IsOnlyForFriends { get; set; }
-        public bool IsNearOwner { get; set; }
-        public bool IsSimilarInterest { get; set; }      
+        
+        public int? MaxParticipants { get; set; }
+        public int? MinRequeredAge { get; set; }
+        public int? MaxRequeredAge { get; set; }
+        public Gender? RequiredGenger { get; set; }
 
 #endregion
     }
