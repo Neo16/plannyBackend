@@ -7,8 +7,7 @@ namespace PlannyBackend.Model.Enums
 {
     public enum Gender
     {
-        Male,
-        Female,
-        NotSpecified
+        Male = 1,
+        Female = 2    
     }
 }

@@ -38,9 +38,11 @@ namespace PlannyBackend.DAL
                 UserName = "user@planny.com",
                 NormalizedUserName = "USER@PLANNY.COM",
                 EmailConfirmed = true,
-                SecurityStamp = "345435kl5m3k45m34k",
+                SecurityStamp = "345po5kl5m3k45m34k",
                 PhoneNumber = "+311124211",
-
+                PictureUrl = webrootUrl + "/user-placeholder.jpg",
+                BirthDate = new DateTime(1995,04,13),
+                SelfIntroduction = "Szeretem a kakaót."                 
             };
             user.PasswordHash = passwordHasher.HashPassword(user, "Asdf123!");
 

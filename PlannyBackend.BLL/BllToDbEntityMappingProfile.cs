@@ -41,7 +41,7 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.ToTime, f => f.MapFrom(k => k.ToTime))          
                 .ForMember(e => e.MaxParticipants, f => f.MapFrom(k => k.MaxParticipants))
                 .ForMember(e => e.MinRequeredAge, f => f.MapFrom(k => k.MinRequeredAge))
-                .ForMember(e => e.MaxRequeredAge, f => f.MapFrom(k => k.MaxRequeredAge))                       
+                .ForMember(e => e.MaxRequeredAge, f => f.MapFrom(k => k.MaxRequeredAge))              
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
                 .ForMember(e => e.PlannyCategorys, f => f.MapFrom(k => k.CategoryIds))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
@@ -81,11 +81,20 @@ namespace PlannyBackend.BLL
                .ForMember(e => e.OwnerName, f => f.MapFrom(k => k.Planny.Owner.UserName));
 
             CreateMap<ApplicationUser, ProfileDto>()
+               .ForMember(e => e.Gender, f => f.MapFrom(k => k.Gender))
                .ForMember(e => e.UserName, f => f.MapFrom(k => k.UserName))
                .ForMember(e => e.Age, f => f.MapFrom(k => DateTime.Now.Year - k.BirthDate.Year))
                .ForMember(e => e.Gender, f => f.MapFrom(k => k.Gender))
                .ForMember(e => e.SelfIntroduction, f => f.MapFrom(k => k.SelfIntroduction))
                .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl));
+
+            CreateMap<ApplicationUser, EditProfileDto>()
+             .ForMember(e => e.Gender, f => f.MapFrom(k => k.Gender))
+             .ForMember(e => e.UserName, f => f.MapFrom(k => k.UserName))
+             .ForMember(e => e.BirthDate, f => f.MapFrom(k => k.BirthDate))
+             .ForMember(e => e.Gender, f => f.MapFrom(k => k.Gender))
+             .ForMember(e => e.SelfIntroduction, f => f.MapFrom(k => k.SelfIntroduction))
+             .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl));
         }
     }
 }

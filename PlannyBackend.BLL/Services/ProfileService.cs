@@ -27,7 +27,14 @@ namespace PlannyBackend.BLL.Services
                  .SingleOrDefaultAsync();
 
             return Mapper.Map<ProfileDto>(profileEnt);
+        }
 
+        public async Task<EditProfileDto> GetForEdit(int id)
+        {
+            return await _context.Users
+                 .Where(e => e.Id == id)
+                 .ProjectTo<EditProfileDto>()
+                 .SingleOrDefaultAsync();         
         }
 
         public async Task Edit(int id, EditProfileDto profile)
@@ -42,6 +49,7 @@ namespace PlannyBackend.BLL.Services
                 user.Gender = profile.Gender;
                 user.SelfIntroduction = profile.SelfIntroduction;
                 user.PictureUrl = profile.PictureUrl;
+                user.Gender = profile.Gender;
                 await _context.SaveChangesAsync();
             }
             else

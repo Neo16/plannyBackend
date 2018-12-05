@@ -34,7 +34,7 @@ namespace PlannyBackend.Model
         public int? MaxParticipants { get; set; }
         public int? MinRequeredAge { get; set; }
         public int? MaxRequeredAge { get; set; }
-        public Gender? RequiredGenger { get; set; }
+        public Gender? Gender { get; set; }
 
 #endregion
     }

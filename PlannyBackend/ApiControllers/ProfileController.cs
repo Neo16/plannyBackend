@@ -40,17 +40,17 @@ namespace PlannyBackend.Web.ApiControllers
         }
 
         [HttpGet("own")]
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(ProfileDto), "Returns own profile data")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(EditProfileDto), "Returns own profile data")]
         public async Task<IActionResult> GetMyProfile()
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var profile = await _profileService.Get(currentUserId);
+            var profile = await _profileService.GetForEdit(currentUserId);
             return Ok(profile);
         }
 
-        [HttpPost("own/edit")]
+        [HttpPut("own/edit")]
         [SwaggerResponse((int)HttpStatusCode.OK, typeof(string), "Edit was successful.")]
-        public async Task<IActionResult> UpdateProfile(EditProfileDto profile)
+        public async Task<IActionResult> UpdateProfile([FromBody] EditProfileDto profile)
         {
             if (!ModelState.IsValid)
             {
