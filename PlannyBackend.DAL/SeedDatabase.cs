@@ -167,8 +167,8 @@ namespace PlannyBackend.DAL
                     Description = "Discription for planny number " + i,
                     PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
-                    FromTime = DateTime.Now.AddDays(7),
-                    ToTime = DateTime.Now.AddDays(8),
+                    FromTime = DateTime.Now.AddDays(2),
+                    ToTime = DateTime.Now.AddDays(3),
                     MaxRequeredAge = 99,
                     MinRequeredAge = 18,
                     MaxParticipants = 10,
@@ -188,8 +188,8 @@ namespace PlannyBackend.DAL
                     Description = "Discription for planny number " + i,
                     PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
-                    FromTime = DateTime.Now.AddDays(7),
-                    ToTime = DateTime.Now.AddDays(8),
+                    FromTime = DateTime.Now.AddDays(2),
+                    ToTime = DateTime.Now.AddDays(3),
                     MaxRequeredAge = 99,
                     MinRequeredAge = 18,
                     MaxParticipants = 10,

@@ -12,6 +12,8 @@ using PlannyBackend.BLL.Dtos;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using PlannyBackend.BLL.Exceptions;
+using PlannyBackend.BLL.Dtos.Plannies.Acquire;
+using PlannyBackend.BLL.Dtos.Plannies;
 
 namespace PlannyBackend.Services
 {
@@ -75,14 +77,31 @@ namespace PlannyBackend.Services
                .ToListAsync();
         }
 
-        public async Task<PlannyDtoWithParticipations> GetByIdWithParticipants(int Id)
+        public async Task<PlannyDtoWithJoinStatus> GetByIdWithJoinStatus(int Id, int currentUserId)
         {
-            return await _context.Plannies
+            var plannyEnt = await _context.Plannies
                .Include(e => e.PlannyCategorys)
                .ThenInclude(e => e.Category)
+               .Include(e => e.Participations)
                .Where(e => e.Id == Id)
-               .ProjectTo<PlannyDtoWithParticipations>()
                .FirstOrDefaultAsync();
+
+            var mappedPlanny = Mapper.Map<PlannyDtoWithJoinStatus>(plannyEnt);
+
+            var participation = plannyEnt.Participations
+                .Where(e => e.UserId == currentUserId)
+                .FirstOrDefault();
+
+            if (participation != null){
+                mappedPlanny.JoinStatus = 
+                    participation.State == ParticipationState.Approved ? JoinStatus.approved : JoinStatus.required;                
+            }
+            else
+            {
+                mappedPlanny.JoinStatus = JoinStatus.none;
+            }
+
+            return mappedPlanny;
         }
 
 

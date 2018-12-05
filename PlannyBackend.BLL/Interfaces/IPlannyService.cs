@@ -1,5 +1,6 @@
 ﻿
 using PlannyBackend.BLL.Dtos;
+using PlannyBackend.BLL.Dtos.Plannies.Acquire;
 using PlannyBackend.Model;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace PlannyBackend.Interfaces
 
         Task UpdatePlanny(int id, CreateEditPlannyDto planny, int userId);
 
-        Task<PlannyDtoWithParticipations> GetByIdWithParticipants(int Id);      
+        Task<PlannyDtoWithJoinStatus> GetByIdWithJoinStatus(int Id, int currentUserId);      
 
         Task<List<PlannyDtoWithParticipations>> GetPlanniesOfUser(int userId);
 

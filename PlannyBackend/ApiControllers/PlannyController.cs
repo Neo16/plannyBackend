@@ -13,6 +13,7 @@ using PlannyBackend.BLL.Dtos;
 using PlannyBackend.Web.WebServices;
 using AutoMapper;
 using PlannyBackend.Model;
+using PlannyBackend.BLL.Dtos.Plannies.Acquire;
 
 namespace PlannyBackend.ApiControllers
 {
@@ -70,12 +71,13 @@ namespace PlannyBackend.ApiControllers
             return Ok(plannies);
         }
 
+        //Todo: legyen külön getPlanny- a manage-hez, és egy getPlannyFor join 
         [HttpGet("{id}")]      
-        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDtoWithParticipations), "Returns a planny of given Id.")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(PlannyDtoWithJoinStatus), "Returns a planny of given Id.")]
         public async Task<IActionResult> GetPlanny(int id)
         {
             var currentUserId = await _currentUserService.GetCurrentUserId();
-            var planny = await _plannyService.GetByIdWithParticipants(id);
+            PlannyDtoWithJoinStatus planny = await _plannyService.GetByIdWithJoinStatus(id, currentUserId);
             return Ok(planny);
         }
 
