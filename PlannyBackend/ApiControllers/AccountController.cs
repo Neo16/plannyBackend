@@ -13,7 +13,7 @@ using PlannyBackend.BLL.Dtos;
 namespace PlannyBackend.Web.ApiControllers
 {
     [Produces("application/json")]
-    [Route("api/Account")]
+    [Route("api/account")]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

@@ -130,10 +130,11 @@ namespace PlannyBackend.ApiControllers
         }
 
         [HttpDelete("{id}")]
+        [SwaggerResponse((int)HttpStatusCode.OK, typeof(int), "Succesfully deleted planny witth the id returned.")]
         public async Task<IActionResult> Delete(int id)
         {
             await _plannyService.Delete(id);
-            return Ok("delete succesfull");
+            return Ok(id);
         }
 
         [HttpGet("myparticipations")]
