@@ -22,17 +22,15 @@ namespace PlannyBackend.Services
             return await _context.Categories.ToListAsync();
         }
 
-        public async Task<List<Category>> GetMainCategories()
+        public async Task<List<MainCategory>> GetMainCategories()
         {
-            return await _context.Categories
-                .Where( e => e.ParentCategoryId == null)
+            return await _context.MainCategories              
                 .ToListAsync();
         }
 
         public async Task<List<Category>> GetSubCategories()
         {
-            return await _context.Categories
-                .Where(e => e.ParentCategoryId != null)
+            return await _context.Categories             
                 .ToListAsync();
         }
     }

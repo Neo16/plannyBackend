@@ -54,61 +54,61 @@ namespace PlannyBackend.DAL
 
         private static ApplicationDbContext CreateCategories(this ApplicationDbContext context)
         {
-            var category1 = new Category()
+            var mainCategory1 = new MainCategory()
             {
                 Name = "sports",
             };
-            context.Categories.Add(category1);
+            context.MainCategories.Add(mainCategory1);
 
-            var category2 = new Category()
+            var mainCategory2 = new MainCategory()
             {
                 Name = "movies",
             };
-            context.Categories.Add(category2);
+            context.MainCategories.Add(mainCategory2);
 
-            var category3 = new Category()
+            var mainCategory3 = new MainCategory()
             {
                 Name = "music",
             };
-            context.Categories.Add(category3);
+            context.MainCategories.Add(mainCategory3);
 
-            var category4 = new Category()
+            var mainCategory4 = new MainCategory()
             {
                 Name = "travel",
             };
-            context.Categories.Add(category4);
+            context.MainCategories.Add(mainCategory4);
 
-            var category5 = new Category()
+            var mainCategory5 = new MainCategory()
             {
                 Name = "party",
             };
-            context.Categories.Add(category5);
+            context.MainCategories.Add(mainCategory5);
 
-            var category6 = new Category()
+            var category6 = new MainCategory()
             {
                 Name = "social",
             };
-            context.Categories.Add(category6);
+            context.MainCategories.Add(category6);
 
-            var category7 = new Category()
+            var mainCategory7 = new MainCategory()
             {
                 Name = "gaming",
             };
-            context.Categories.Add(category7);
+            context.MainCategories.Add(mainCategory7);
 
-            var category8 = new Category()
+            var mainCategory8 = new MainCategory()
             {
                 Name = "food",
             };
-            context.Categories.Add(category8);
+            context.MainCategories.Add(mainCategory8);
 
             for (int i = 1; i <= 8; i++)
             {
-                var cat = new Category()
+                var cat = new MainCategory()
                 {
                     Name = "category" + i,
                 };
-                context.Categories.Add(cat);
+                context.MainCategories.Add(cat);
             }
             context.SaveChanges();
 
@@ -116,21 +116,21 @@ namespace PlannyBackend.DAL
             var subCat1 = new Category()
             {
                 Name = "Basketball",
-                ParentCategoryId = category1.Id
+                MainCategoryId = mainCategory1.Id
             };
             context.Categories.Add(subCat1);
 
             var subCat2 = new Category()
             {
                 Name = "Swimming",
-                ParentCategoryId = category1.Id
+                MainCategoryId = mainCategory1.Id
             };
             context.Categories.Add(subCat2);
 
             var subCat3 = new Category()
             {
                 Name = "Tennis",
-                ParentCategoryId = category1.Id
+                MainCategoryId = mainCategory1.Id
             };
             context.Categories.Add(subCat3);
             context.SaveChanges();
@@ -165,7 +165,7 @@ namespace PlannyBackend.DAL
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(2),
                     ToTime = DateTime.Now.AddDays(3),
@@ -186,7 +186,7 @@ namespace PlannyBackend.DAL
                     OwnerId = 1,
                     Name = "Planny " + i,
                     Description = "Discription for planny number " + i,
-                    PlannyCategorys = categories.GetRange(0, r.Next(0, categories.Count - 1))
+                    PlannyCategories = categories.GetRange(0, r.Next(0, categories.Count - 1))
                                   .Select(c => new PlannyCategory() { Category = c }).ToList(),
                     FromTime = DateTime.Now.AddDays(2),
                     ToTime = DateTime.Now.AddDays(3),

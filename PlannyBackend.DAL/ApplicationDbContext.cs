@@ -13,6 +13,7 @@ namespace PlannyBackend.DAL
         public virtual DbSet<Planny> Plannies { get; set; }
         public virtual DbSet<PlannyCategory> PlannyCategorys { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<MainCategory> MainCategories { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

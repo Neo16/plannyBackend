@@ -8,11 +8,11 @@ namespace PlannyBackend.Model
     public class Category
     {
         public int Id { get; set; }
-        public string Name { get; set; }       
+        public string Name { get; set; }      
 
-        //Todo: nem lehetne referenciával? 
-        public int? ParentCategoryId { get; set; }
+        public ICollection<PlannyCategory> PlannyCategories { get; set; }
 
-        public ICollection<PlannyCategory> PlannyCategorys { get; set; }
+        public int MainCategoryId { get; set; }
+        public MainCategory MainCategory { get; set; }
     }
 }

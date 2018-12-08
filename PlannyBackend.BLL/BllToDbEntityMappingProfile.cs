@@ -30,7 +30,7 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.MinRequeredAge, f => f.MapFrom(k => k.MinRequeredAge))
                 .ForMember(e => e.MaxRequeredAge, f => f.MapFrom(k => k.MaxRequeredAge))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.Categories, f => f.MapFrom(k => k.PlannyCategorys))
+                .ForMember(e => e.Categories, f => f.MapFrom(k => k.PlannyCategories))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location))
                 .ForMember(e => e.OwnerName, f => f.MapFrom(k => k.Owner.UserName))
                 .ForMember(e => e.OwnerId, f => f.MapFrom(k => k.Owner.Id));
@@ -44,13 +44,14 @@ namespace PlannyBackend.BLL
                 .ForMember(e => e.MinRequeredAge, f => f.MapFrom(k => k.MinRequeredAge))
                 .ForMember(e => e.MaxRequeredAge, f => f.MapFrom(k => k.MaxRequeredAge))
                 .ForMember(e => e.PictureUrl, f => f.MapFrom(k => k.PictureUrl))
-                .ForMember(e => e.PlannyCategorys, f => f.MapFrom(k => k.CategoryIds))
+                .ForMember(e => e.PlannyCategories, f => f.MapFrom(k => k.CategoryIds))
                 .ForMember(e => e.Location, f => f.MapFrom(k => k.Location));
 
             CreateMap<int, PlannyCategory>()
                 .ForMember(e => e.CategoryId, f => f.MapFrom(k => k));
 
             CreateMap<PlannyCategory, CategoryDto>()
+              .ForMember(e => e.Id, f => f.MapFrom(k => k.Category.Id))
               .ForMember(e => e.Name, f => f.MapFrom(k => k.Category.Name));
 
             CreateMap<Planny, PlannyDtoWithParticipations>()

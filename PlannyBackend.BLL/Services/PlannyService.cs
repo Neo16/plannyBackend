@@ -40,7 +40,8 @@ namespace PlannyBackend.Services
 
         public async Task UpdatePlanny(int id, CreateEditPlannyDto planny, int userId)
         {
-            Planny oldPlannyEnt = await _context.Plannies
+            Planny oldPlannyEnt = await _context.Plannies      
+                .Include(e => e.PlannyCategories)
                 .Where(e => e.Owner.Id == userId)
                 .Where(e => e.Id == id)
                 .SingleOrDefaultAsync();
@@ -50,27 +51,32 @@ namespace PlannyBackend.Services
                 throw new BusinessLogicException("Invalid update request.") { ErrorCode = ErrorCode.InvalidArgument };
             }
             Planny newplannyEnt = Mapper.Map<Planny>(planny);
-
-            newplannyEnt.Id = oldPlannyEnt.Id;
-            foreach (var plannyCategory in newplannyEnt.PlannyCategorys)
+         
+            if (oldPlannyEnt.PlannyCategories != null && oldPlannyEnt.PlannyCategories.Count() > 0)
             {
-                plannyCategory.Category = null;
-                plannyCategory.PlannyId = newplannyEnt.Id;
+                _context.PlannyCategorys.RemoveRange(oldPlannyEnt.PlannyCategories);
             }
-            if (oldPlannyEnt.PlannyCategorys != null && oldPlannyEnt.PlannyCategorys.Count() > 0)
-            {
-                _context.PlannyCategorys.RemoveRange(oldPlannyEnt.PlannyCategorys);
-            }
+            await _context.SaveChangesAsync();
 
-            _context.PlannyCategorys.AddRange(newplannyEnt.PlannyCategorys);
-            _context.Entry(oldPlannyEnt).CurrentValues.SetValues(newplannyEnt);
+            oldPlannyEnt.Description = newplannyEnt.Description;
+            oldPlannyEnt.FromTime = newplannyEnt.FromTime;
+            oldPlannyEnt.Gender = newplannyEnt.Gender;
+            oldPlannyEnt.Location = newplannyEnt.Location;
+            oldPlannyEnt.MaxParticipants = newplannyEnt.MaxParticipants;
+            oldPlannyEnt.MaxRequeredAge = newplannyEnt.MaxRequeredAge;
+            oldPlannyEnt.MinRequeredAge = newplannyEnt.MinRequeredAge;
+            oldPlannyEnt.Name = newplannyEnt.Name;
+            oldPlannyEnt.OwnerId = newplannyEnt.OwnerId;
+            oldPlannyEnt.PictureUrl = newplannyEnt.PictureUrl;
+            oldPlannyEnt.PlannyCategories = newplannyEnt.PlannyCategories;
+
             await _context.SaveChangesAsync();
         }
 
         public async Task<List<PlannyDtoWithParticipations>> GetPlanniesOfUser(int userId)
         {
             return await _context.Plannies
-               .Include(e => e.PlannyCategorys)
+               .Include(e => e.PlannyCategories)
                .ThenInclude(e => e.Category)
                .Where(e => e.Owner.Id == userId)
                .ProjectTo<PlannyDtoWithParticipations>()
@@ -80,7 +86,7 @@ namespace PlannyBackend.Services
         public async Task<PlannyDtoWithJoinStatus> GetByIdWithJoinStatus(int Id, int currentUserId)
         {
             var plannyEnt = await _context.Plannies
-               .Include(e => e.PlannyCategorys)
+               .Include(e => e.PlannyCategories)
                .ThenInclude(e => e.Category)
                .Include(e => e.Participations)
                .Where(e => e.Id == Id)
@@ -125,7 +131,7 @@ namespace PlannyBackend.Services
         public async Task<List<PlannyDto>> SearchPlannies(PlannyQueryDto query)
         {
             var plannies = _context.Plannies
-                .Include(e => e.PlannyCategorys)
+                .Include(e => e.PlannyCategories)
                 .ThenInclude(e => e.Category)
                 .AsQueryable();
 
@@ -135,7 +141,7 @@ namespace PlannyBackend.Services
                 if (query.CategoryIds != null && query.CategoryIds.Count > 0)
                 {
                     var filteredCategoryIds = query.CategoryIds;
-                    plannies = plannies.Where(e => e.PlannyCategorys.Any(c => filteredCategoryIds.Contains(c.CategoryId)));
+                    plannies = plannies.Where(e => e.PlannyCategories.Any(c => filteredCategoryIds.Contains(c.CategoryId)));
                 }
 
                 //szűrők kiíróra és résztvevőkre
