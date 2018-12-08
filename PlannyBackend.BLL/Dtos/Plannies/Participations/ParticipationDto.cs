@@ -1,4 +1,6 @@
 ﻿
+using PlannyBackend.Model.Enums;
+
 namespace PlannyBackend.BLL.Dtos
 {
     public class ParticipationDto
@@ -6,6 +8,6 @@ namespace PlannyBackend.BLL.Dtos
         public string UserName { get; set; }
         public int UserId { get; set; }
         public int ParticipationId { get; set; }
-        public string State { get; set; }
+        public ParticipationState State { get; set; }
     }
 }
