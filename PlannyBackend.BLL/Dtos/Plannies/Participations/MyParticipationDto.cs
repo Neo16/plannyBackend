@@ -23,5 +23,12 @@ namespace PlannyBackend.BLL.Dtos
         public DateTime PlannyToTime { get; set; }
 
         public string OwnerName { get; set; }
+
+        public int NumOfAcceptedAttendees { get; set; }
+
+        public int NumOfRequestedAttendees { get; set; }
+
+        public List<CategoryDto> PlannyCategories { get; set; }
+
     }
 }
